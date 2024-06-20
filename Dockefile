@@ -1,0 +1,17 @@
+FROM node:21.10.0
+
+WORKDIR /app/websercice01
+# Copie package.json e package-lock.json
+COPY package.json yarn.lock ./
+
+# Instale dependências
+# RUN npm cache clean --force 
+RUN yarn install
+# Copie o restante do código do aplicativo
+COPY . . 
+
+COPY ./.env.production ./.env
+RUN yarn build
+EXPOSE 3001:3000
+
+CMD [ "yarn", "start:dev" ]

@@ -26,13 +26,31 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Installation
+## 1. Installation
 
 ```bash
 $ npm install
 ```
 
-## Running the app
+## 2. Load database
+
+```bash
+$ docker-compose up -d
+```
+
+## 4. rename .env.template file
+
+```bash
+$ .env
+```
+
+## 5. Rebuild the database with the seed
+
+```bash
+$ http://localhost:3000/api/v2/seed
+```
+
+## 6. Running the app
 
 ```bash
 # development
@@ -45,7 +63,7 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Test
+## 7. Test
 
 ```bash
 # unit tests
@@ -58,7 +76,7 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
+## 8. Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
