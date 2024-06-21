@@ -1,0 +1,44 @@
+services:
+  #================================================================================================
+  # MARIADB
+  #================================================================================================
+  db_mariadb:
+    image: mariadb:10.11.7-jammy
+    container_name: mariadb_cdk
+    ports:
+      - "3309:3306"
+    volumes:
+      - ./mariadb_data:/var/lib/mysql
+      - ./mariadb_cnf:/etc/mysql/conf.d/mariadb.cnf
+      - ./mariadb_log/logs:/var/lib/mysql/logs/
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+     # MYSQL_TCP_PORT: 3309  
+    networks:
+      - monalisa
+  #================================================================================================
+  # PHPMYADMIN
+  #================================================================================================
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_cdk
+    depends_on:
+      - db_mariadb    
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - ./phpmyadmin/config:/config  
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      PMA_HOST: db_mariadb
+      UPLOAD_LIMIT: 300M
+    networks:
+      - monalisa
+
+networks:
+  monalisa:

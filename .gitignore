@@ -2,6 +2,11 @@
 /dist
 /node_modules
 /build
+# docker
+/mariadb_cnf
+mariadb_data
+/mariadb_log
+/phpmyadmin
 
 # Logs
 logs
@@ -41,7 +46,7 @@ lerna-debug.log*
 .env.test.local
 .env.production.local
 .env.local
-
+.env.production
 # temp directory
 .temp
 .tmp
