@@ -5,9 +5,13 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/core/prisma/prisma.service';
 
 import * as bcrypt from 'bcrypt';
+import { DatabaseService } from 'src/database/database.service';
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly dbService: DatabaseService,
+  ) {}
 
   async create(createUserDto: CreateUserDto) {
     try {
@@ -71,16 +75,34 @@ export class UserService {
         SENHA: true,
       },
     });
+
+    /*     const connection = this.dbService.getConnection();
+    const [rows] = await connection.query(`
+                                            select 
+                                              ID_USUARIO_SYSTEM,
+                                              ID_SYSTEM_CFG_CLIENTE,
+                                              ID_PESSOA,
+                                              LOGIN,
+                                              NOME,
+                                              EMAIL_DE_LOGIN,
+                                              SENHA
+                                            from 
+                                              tbl_system_usuario
+                                            where
+                                             ID_SYSTEM_CFG_CLIENTE = 14
+                                            order by ID_USUARIO_SYSTEM desc limit 2
+                                            `);
+    return rows; */
   }
 
   async findOne(id: number) {
     //there is the option to use findFirst or findMany but findUnique is more performant
 
     if (!id) throw new NotFoundException(`User with id not found`);
-    console.log('id: ' + id);
+    // console.log('id: ' + id);
     await this.userExists(id);
 
-    console.log('id3: ' + id);
+    //console.log('id3: ' + id);
     return this.prisma.tbl_system_usuario.findUnique({
       where: {
         ID_USUARIO_SYSTEM: id,
