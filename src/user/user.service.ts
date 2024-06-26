@@ -55,7 +55,7 @@ export class UserService {
   }
 
   async findAll() {
-    return this.prisma.tbl_system_usuario.findMany({
+    /*     return this.prisma.tbl_system_usuario.findMany({
       where: {
         EMAIL_DE_LOGIN: {
           contains: '@',
@@ -74,9 +74,9 @@ export class UserService {
         EMAIL_DE_LOGIN: true,
         SENHA: true,
       },
-    });
+    }); */
 
-    /*     const connection = this.dbService.getConnection();
+    const connection = this.dbService.getConnection();
     const [rows] = await connection.query(`
                                             select 
                                               ID_USUARIO_SYSTEM,
@@ -92,7 +92,7 @@ export class UserService {
                                              ID_SYSTEM_CFG_CLIENTE = 14
                                             order by ID_USUARIO_SYSTEM desc limit 2
                                             `);
-    return rows; */
+    return rows;
   }
 
   async findOne(id: number) {

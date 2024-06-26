@@ -3,7 +3,7 @@ services:
   # MARIADB
   #================================================================================================
   db_mariadb:
-    image: mariadb:10.11.7-jammy
+    image: mariadb:11.4.2-noble
     container_name: mariadb_cdk
     ports:
       - "3309:3306"
