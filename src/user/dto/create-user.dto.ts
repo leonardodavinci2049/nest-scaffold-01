@@ -7,12 +7,18 @@ import {
   IsStrongPassword,
   IsUUID,
 } from 'class-validator';
-import { Role } from 'src/core/enums/role.enum';
+import { RoleEnum } from 'src/core/enums/role.enum';
+
+//import { Role } from 'src/core/enums/role.enum';
 
 export class CreateUserDto {
-  @IsUUID(4)
   @IsOptional()
+  @IsUUID(4, { message: 'ID_UUID must be a valid UUIDv4' })
   ID_UUID;
+
+  @IsOptional()
+  @IsInt()
+  ID_USUARIO_SYSTEM?: number;
 
   @IsInt()
   ID_SYSTEM_CFG_CLIENTE?: number;
@@ -22,9 +28,11 @@ export class CreateUserDto {
   LOGIN?: string;
   @IsString({ message: 'NOME must be a valid string', each: true })
   NOME?: string;
+
   @IsOptional()
-  @IsEnum(Role)
+  @IsEnum(RoleEnum, { message: 'ROLE must be a valid Role' })
   ROLE?: number;
+
   @IsEmail({}, { message: 'Invalid email' })
   EMAIL_DE_LOGIN: string;
   @IsStrongPassword({ minLength: 6 }, { message: 'Password is too weak' })

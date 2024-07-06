@@ -18,40 +18,42 @@ export class UserService {
       //   const salt = await bcrypt.genSalt(10);
 
       //  console.log('salt: ' + salt);
+      const password = await bcrypt.hash(createUserDto.SENHA, 10);
 
-      createUserDto.SENHA = await bcrypt.hash(createUserDto.SENHA, 10);
+      const offset = new Date().getTimezoneOffset() * 60000;
+      createUserDto.DATADOCADASTRO = new Date(Date.now() - offset);
+      createUserDto.DT_UPDATE = new Date(Date.now() - offset);
+
+      createUserDto.ID_UUID = UuidV4();
+
+      // console.log(createUserDto.EMAIL_DE_LOGIN, createUserDto.SENHA, password);
+
+      return await this.prisma.tbl_system_usuario.create({
+        data: {
+          ID_UUID: createUserDto.ID_UUID,
+          ID_SYSTEM_CFG_CLIENTE: createUserDto.ID_SYSTEM_CFG_CLIENTE,
+          ID_PESSOA: createUserDto.ID_PESSOA,
+          LOGIN: createUserDto.LOGIN,
+          NOME: createUserDto.NOME,
+          EMAIL_DE_LOGIN: createUserDto.EMAIL_DE_LOGIN,
+          SENHA: password,
+          //  ROLE: createUserDto.ROLE,
+          DATADOCADASTRO: createUserDto.DATADOCADASTRO,
+          DT_UPDATE: createUserDto.DT_UPDATE,
+        },
+        select: {
+          ID_UUID: true,
+          ID_USUARIO_SYSTEM: true,
+          ID_SYSTEM_CFG_CLIENTE: true,
+          NOME: true,
+          // ROLE: true,
+          EMAIL_DE_LOGIN: true,
+          DATADOCADASTRO: true,
+        },
+      });
     } catch (error) {
       throw new NotFoundException(error.message);
     }
-
-    const offset = new Date().getTimezoneOffset() * 60000;
-    createUserDto.DATADOCADASTRO = new Date(Date.now() - offset);
-    createUserDto.DT_UPDATE = new Date(Date.now() - offset);
-
-    createUserDto.ID_UUID = UuidV4();
-
-    return await this.prisma.tbl_system_usuario.create({
-      data: {
-        ID_UUID: createUserDto.ID_UUID,
-        ID_SYSTEM_CFG_CLIENTE: createUserDto.ID_SYSTEM_CFG_CLIENTE,
-        ID_PESSOA: createUserDto.ID_PESSOA,
-        LOGIN: createUserDto.LOGIN,
-        NOME: createUserDto.NOME,
-        EMAIL_DE_LOGIN: createUserDto.EMAIL_DE_LOGIN,
-        SENHA: createUserDto.SENHA,
-        //  ROLE: createUserDto.ROLE,
-        DATADOCADASTRO: createUserDto.DATADOCADASTRO,
-        DT_UPDATE: createUserDto.DT_UPDATE,
-      },
-      select: {
-        ID_USUARIO_SYSTEM: true,
-        ID_SYSTEM_CFG_CLIENTE: true,
-        NOME: true,
-        // ROLE: true,
-        EMAIL_DE_LOGIN: true,
-        DATADOCADASTRO: true,
-      },
-    });
   }
 
   async findAll() {
@@ -113,7 +115,7 @@ export class UserService {
         ID_PESSOA: true,
         LOGIN: true,
         NOME: true,
-        // ROLE: true,
+        ROLE: true,
         EMAIL_DE_LOGIN: true,
         SENHA: true,
       },

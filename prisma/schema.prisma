@@ -7,329 +7,62 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model tbl_bot_action {
-  ID_ACTION   Int       @id @default(autoincrement())
-  ID_TIMER    Int?
-  ID_TAREFA   Int?
-  ACTION_NAME String?   @db.VarChar(200)
-  VALOR       String?   @db.VarChar(50)
-  DT_INICIO   DateTime? @db.DateTime(0)
-  DT_TERMINO  DateTime? @db.DateTime(0)
-  DT_CADASTRO DateTime? @db.DateTime(0)
-}
-
-model tbl_bot_tasks {
-  ID_TASK            Int       @id @default(autoincrement())
-  TASK               String?   @db.VarChar(100)
-  INATIVO            Int?      @default(0) @db.SmallInt
-  HORA               Int?      @default(0)
-  MINUTO             Int?      @default(0)
-  INTERVALO_HORA     Int?
-  VALUE_INT          Int?      @default(0)
-  VALUE_STR          String?   @db.VarChar(500)
-  PATH_FILE_ORIGEM   String?   @db.VarChar(200)
-  PATH_FILE_DESTINO  String?   @db.VarChar(200)
-  PARAMETRO1         String?   @db.VarChar(500)
-  PARAMETRO2         Int?
-  PARAMETRO3         String?   @db.VarChar(500)
-  PARAMETRO4         Int?
-  FLAG_ANDAMENTO     Int?      @default(0) @db.SmallInt
-  TAREFA_ANTERIOR    Int?      @db.SmallInt
-  DT_INICIO_EXECUCAO DateTime? @db.DateTime(0)
-  DT_FINAL_EXECUCAO  DateTime? @db.DateTime(0)
-  DT_TIMER           DateTime? @db.DateTime(0)
-  DT_EXECUCAO        DateTime? @db.Date
-  DT_CADASTRO        DateTime? @db.DateTime(0)
-}
-
-model tbl_email_system {
-  ID_SYSTEM         Int     @id @default(autoincrement())
-  ID_DEPARTAMENTO   Int?    @default(1)
-  ID_USUARIO        Int?    @default(0)
-  NOME_DA_CONTA     String? @default("Conta Comercial") @db.VarChar(60)
-  NOME_REMETENTE    String? @default("Email Comercial") @db.VarChar(100)
-  EMAIL_REMETENTE   String? @default("comercial@email.com.br") @db.VarChar(150)
-  MENSAGEM_CCO      String? @db.VarChar(150)
-  USUARIO           String? @default("comercial@email.com.br") @db.VarChar(50)
-  SENHA             String? @default("19372846") @db.VarChar(50)
-  SERVIDOR_POP      String? @default("pop.gmail.com") @db.VarChar(100)
-  SERVIDOR_SMTP     String? @default("smtp.gmail.com") @db.VarChar(150)
-  PORTA_POP3        Int?    @default(995)
-  PORTA_PARA_TLS    Int?    @default(587)
-  PORTA_PARA_SSL    Int?    @default(465)
-  PORTA_SMTP        Int?    @default(587)
-  TIPO_EMAIL        Int?    @default(1) @db.SmallInt
-  USAR_AUTENTICACAO Int?    @default(1) @db.SmallInt
-  TIPO_SSL          Int?    @default(1) @db.SmallInt
-  USAR_SSL          Int?    @default(1) @db.SmallInt
-  EMAIL_FORMULARIO  String? @db.VarChar(150)
-  DESATIVAR         Int     @default(0) @db.SmallInt
-  ASSINATURA        String? @db.LongText
-}
-
-model tbl_email_template {
-  ID_TEMPLATE       Int       @id @default(autoincrement())
-  ID_SYSTEM_CLIENTE Int?      @default(5)
-  ID_LOJA           Int?      @default(1)
-  ID_USUARIO        Int?      @default(1)
-  ID_DEPARTAMENTO   Int?      @default(1)
-  ID_TIPO_REMETENTE Int?      @default(0)
-  NOME_TEMPLATE     String?   @db.VarChar(150)
-  ID_CATEGORIA      Int?
-  NOMEDOREMETENTE   String?   @db.VarChar(50)
-  EMAILDOREMETENTE  String?   @db.VarChar(150)
-  SENHA_DO_EMAIL    String?   @db.VarChar(50)
-  ENVIAR_COPIA_PARA String?   @db.VarChar(150)
-  FORMATO_TEXTO     Int?      @db.SmallInt
-  ASSUNTO           String?   @db.VarChar(150)
-  TEMPLATE          String?   @db.LongText
-  ANEXO             String?   @db.VarChar(200)
-  DESATIVAR         Int       @default(0) @db.SmallInt
-  DATADOCADASTRO    DateTime? @db.DateTime(0)
-}
-
-model tbl_email_usuario {
-  ID_EMAIL          Int     @id @default(autoincrement())
-  ID_SYSTEM         Int     @default(0)
-  ID_DEPARTAMENTO   Int?    @default(1)
-  ID_USUARIO        Int?    @default(0)
-  NOME_DA_CONTA     String? @default("Conta Comercial") @db.VarChar(60)
-  NOME_REMETENTE    String? @default("Email Comercial") @db.VarChar(100)
-  EMAIL_REMETENTE   String? @default("comercial@email.com.br") @db.VarChar(150)
-  MENSAGEM_CCO      String? @db.VarChar(150)
-  USUARIO           String? @default("comercial@email.com.br") @db.VarChar(50)
-  SENHA             String? @default("19372846") @db.VarChar(50)
-  SERVIDOR_POP      String? @default("pop.gmail.com") @db.VarChar(100)
-  SERVIDOR_SMTP     String? @default("smtp.gmail.com") @db.VarChar(150)
-  PORTA_POP3        Int?    @default(995)
-  PORTA_PARA_TLS    Int?    @default(587)
-  PORTA_PARA_SSL    Int?    @default(465)
-  PORTA_SMTP        Int?    @default(587)
-  TIPO_EMAIL        Int?    @default(1) @db.SmallInt
-  USAR_AUTENTICACAO Int?    @default(1) @db.SmallInt
-  TIPO_SSL          Int?    @default(1) @db.SmallInt
-  USAR_SSL          Int?    @default(1) @db.SmallInt
-  EMAIL_FORMULARIO  String? @db.VarChar(150)
-  DESATIVAR         Int     @default(1) @db.SmallInt
-  ASSINATURA        String? @db.LongText
-}
-
-model tbl_email_variables {
-  ID_SYSTEM                  Int     @id @default(autoincrement())
-  COMPANY_NAME               String? @db.VarChar(200)
-  COMPANY_ENDERECO           String? @db.LongText
-  COMPANY_HORARIOS           String? @db.LongText
-  COMPANY_DOMAIN             String? @db.VarChar(200)
-  COMPANY_URL_AREA_CLIENT    String? @db.VarChar(300)
-  COMPANY_URL_LOGO           String? @db.VarChar(300)
-  COMPANY_ASSINATURA         String? @db.LongText
-  COMPANY_TELEFONE_COMERCIAL String? @db.VarChar(200)
-  COMPANY_EMAIL_COMERCIAL    String? @db.VarChar(200)
-  COMPANY_REGIAO_ATENDIMENTO String? @db.VarChar(500)
-  COMPANY_PRODUTOS_DESCRICAO String? @db.LongText
-  COMPANY_PRODUTOS_MERCADO   String? @db.LongText
-  TEMPLATE_HTML_HEADER       String? @db.LongText
-  TEMPLATE_CSS_CODIGO        String? @db.LongText
-  TEMPLATE_HTML_FOOTER       String? @db.LongText
-}
-
 model tbl_loja {
   ID_LOJA             Int
-  ID_SYSTEM           Int
+  ID_SYSTEM_CLIENTE   Int       @default(1)
+  ID_SYSTEM           Int?
   ID_USUARIO          Int?      @default(1)
   ID_DEPARTAMENTO     Int?      @default(1)
   NOME                String?   @db.VarChar(300)
-  IP_WEBSERVICE       String?   @default("191.252.58.120") @db.VarChar(100)
-  PORT_WEBSERVICE     Int?      @default(8885)
+  PATH_LOGO01         String?   @db.VarChar(300)
+  CABECALHO_IMPRESSAO String?   @db.LongText
   DOMINIO             String?   @db.VarChar(100)
   WOO_KEY             String?   @db.VarChar(100)
   WOO_SECRET          String?   @db.VarChar(100)
-  WEBSITE             String?   @db.VarChar(300)
-  PATH_LOGO01         String?   @db.VarChar(300)
-  PATH_IMAGEM01       String?   @db.VarChar(300)
-  CABECALHO_IMPRESSAO String?   @db.LongText
   FLAG_REVENDA        Int?      @default(0) @db.SmallInt
+  WEBSITE             String?   @db.VarChar(300)
+  PATH_IMAGEM01       String?   @db.VarChar(300)
   INATIVO             Int?      @default(0) @db.SmallInt
   DT_CADASTRO         DateTime? @db.DateTime(0)
+  DT_EXPORTE          DateTime? @db.Date
+  DT_UPDATE           DateTime? @db.Date
 
-  @@id([ID_LOJA, ID_SYSTEM])
+  @@id([ID_LOJA, ID_SYSTEM_CLIENTE])
 }
 
 model tbl_preposicao {
   ID_PREPOSICAO     Int       @id @default(autoincrement())
   ID_SYSTEM_CLIENTE Int?      @default(0)
+  ID_LOJA           Int?      @default(1)
+  ID_USUARIO        Int?      @default(1)
+  ID_DEPARTAMENTO   Int?      @default(1)
   PREPOSICAO        String?   @db.VarChar(20)
   PRIORIDADE        Int?
   DT_CADASTRO       DateTime? @db.DateTime(0)
+  DT_EXPORTE        DateTime? @db.Date
+  DT_UPDATE         DateTime? @db.Date
 }
 
 model tbl_status {
-  ID_STATUS   Int       @id @default(autoincrement())
-  ID_SYSTEM   Int?
-  STATUS      String?   @db.VarChar(300)
-  NOTAS       String?   @db.LongText
-  FLAG        Int?      @db.SmallInt
-  DT_UPDATE   DateTime? @db.Date
-  DT_CADASTRO DateTime? @db.DateTime(0)
-}
-
-model tbl_system_cfg_cliente {
-  ID_SYSTEM                    Int       @id @default(autoincrement())
-  PASSKEY                      String?   @db.VarChar(100)
-  ID_TEMPLATE                  Int?      @default(0)
-  ID_TIPO_CLIENTE              Int?      @default(1)
-  ID_DATABASE                  Int?      @default(3)
-  NOME_CLIENTE                 String?   @db.VarChar(200)
-  SERVER_IP                    String?   @db.VarChar(100)
-  PORTA_TCP                    Int?
-  PORTA_HTTP                   Int?
-  SERVER_USUARIO               String?   @db.VarChar(100)
-  SERVER_PASSWORD              String?   @db.VarChar(100)
-  FRMPRINCIPAL_TITLE           String?   @db.VarChar(300)
-  FRMPRINCIPAL_ABOUT           String?   @db.LongText
-  FRMPRINCIPAL_LOGO            String?   @db.VarChar(300)
-  FRMPRINCIPAL_EMPRESA         String?   @db.VarChar(200)
-  FRMPRINCIPAL_WALLPAPER       String?   @db.VarChar(300)
-  FRMPRINCIPAL_EMPRESARIAL     String?   @db.LongText
-  AREADOCLIENTE                String?   @db.VarChar(150)
-  DOMINIO                      String?   @db.VarChar(100)
-  DOMINIO_ATACADO              String?   @db.VarChar(100)
-  DOMINIO_VAREJO               String?   @db.VarChar(100)
-  DOMAIN_NAME                  String?   @db.VarChar(100)
-  ECOMMERCE_ATACADO            String?   @db.VarChar(500)
-  ECOMMERCE_VAREJO             String?   @db.VarChar(500)
-  WOO_KEY                      String?   @db.VarChar(100)
-  WOO_SECRET                   String?   @db.VarChar(100)
-  LOCAL_IMAGENS_PRODUTO        String?   @db.VarChar(500)
-  LOCAL_IMAGENS_PESSOAS        String?   @db.VarChar(500)
-  PASTA_IMG_PRODUCTS           String?   @db.VarChar(200)
-  PASTA_IMG_CUSTOMERS          String?   @db.VarChar(200)
-  PATH_ANEXOS_PRODUTO_WINDOWS  String?   @db.VarChar(500)
-  PATH_ANEXOS_CLIENTE_WINDOWS  String?   @db.VarChar(500)
-  PATH_ANEXOS_PEDIDO_WINDOWS   String?   @db.VarChar(500)
-  PATH_ANEXOS_DIVERSOS_WINDOWS String?   @db.VarChar(500)
-  LOCAL_ANEXOS_CLIENTE         String?   @db.VarChar(300)
-  LOCAL_ANEXOS_PRODUTO         String?   @db.VarChar(300)
-  LOCAL_ANEXOS_PEDIDO          String?   @db.VarChar(300)
-  LOCAL_ANEXOS_DIVERSOS        String?   @db.VarChar(45)
-  LOGO1                        String?   @db.VarChar(200)
-  LOGO2                        String?   @db.VarChar(200)
-  LOGO3                        String?   @db.VarChar(200)
-  EMAIL_FOOTER_CONTENT         String?   @db.LongText
-  MYSQL_DBHOST                 String?   @db.VarChar(100)
-  MYSQL_DBPORT                 Int?      @default(0)
-  MYSQL_DBNAME                 String?   @db.VarChar(100)
-  MYSQL_DBUSER                 String?   @db.VarChar(100)
-  MYSQL_DBPASSWORD             String?   @db.VarChar(100)
-  DESATIVAR                    Int       @default(0)
-  ANOTACOES_GERAIS             String?   @db.LongText
-  DT_EXPORTE                   DateTime? @db.DateTime(0)
-  DT_UPDATE                    DateTime? @db.DateTime(0)
-  DATABASE_PATH                String?   @db.VarChar(100)
-  DATABASE_USER                String?   @db.VarChar(100)
-  DATABASE_PASSWORD            String?   @db.VarChar(100)
-  DATABASE_SERVER              String?   @db.VarChar(100)
-  PATH_IMG_PRODUCTS_WINDOWS    String?   @db.VarChar(100)
-  PATH_IMG_CUSTOMERS_WINDOWS   String?   @db.VarChar(100)
-}
-
-model tbl_system_cfg_geral {
-  ID_SYSTEM_CFG Int       @id @default(autoincrement())
-  CHAVE         String?   @db.VarChar(500)
-  VALOR         String?   @db.VarChar(1000)
-  NOTAS         String?   @db.LongText
-  INATIVO       Int?      @default(0)
-  DT_EXPORTE    DateTime? @db.DateTime(0)
-  DT_UPDATE     DateTime? @db.DateTime(0)
-}
-
-model tbl_system_cliente {
-  ID_SYSTEM             Int       @id
-  ID_TEMPLATE           Int?      @default(0)
-  ID_IMPRESSORA         Int?      @default(0)
-  NOME_EMPRESA          String?   @db.VarChar(200)
-  RAZAO_SOCIAL          String?   @db.VarChar(300)
-  URL_DA_LOGO           String?   @db.VarChar(300)
-  CNPJ1                 String?   @db.VarChar(100)
-  CNPJ2                 String?   @db.VarChar(100)
-  INSC_EST1             String?   @db.VarChar(100)
-  INSC_EST2             String?   @db.VarChar(100)
-  INSC_MUNICIPAL1       String?   @db.VarChar(100)
-  INSC_MUNICIPAL2       String?   @db.VarChar(100)
-  COD_MUNICIPIO         String?   @db.VarChar(100)
-  EMAIL_COMERCIAL       String?   @db.VarChar(130)
-  EMAIL_VENDAS          String?   @db.VarChar(144)
-  EMAIL_CADASTRO        String?   @db.VarChar(144)
-  EMAIL_FALECONOSCO     String?   @db.VarChar(144)
-  EMAIL_ADMINISTRATIVO  String?   @db.VarChar(144)
-  TELEFONE_COMERCIAL    String?   @db.VarChar(100)
-  FONE1                 String?   @db.VarChar(100)
-  FONE2                 String?   @db.VarChar(100)
-  FONE3                 String?   @db.VarChar(100)
-  EMAIL1                String?   @db.VarChar(144)
-  EMAIL2                String?   @db.VarChar(144)
-  EMAIL3                String?   @db.VarChar(144)
-  CEP                   String?   @db.VarChar(100)
-  ENDERECO              String?   @db.VarChar(200)
-  ENDERECO_NUMERO       String?   @db.VarChar(50)
-  COMPLEMENTO           String?   @db.VarChar(200)
-  BAIRRO                String?   @db.VarChar(100)
-  CIDADE                String?   @db.VarChar(100)
-  UF                    String?   @db.VarChar(50)
-  REGIAO_PAIS           String?   @db.VarChar(50)
-  PAIS                  String?   @db.VarChar(50)
-  ENDERECO_COMPLETO_02  String?   @db.LongText
-  ENDERECO_COMPLETO_01  String?   @db.LongText
-  DOMAIN_NAME           String?   @db.VarChar(100)
-  FACEBOOK              String?   @db.VarChar(200)
-  TWITTER               String?   @db.VarChar(100)
-  SKYPE                 String?   @db.VarChar(100)
-  WHATSAPP1             String?   @db.VarChar(100)
-  WHATSAPP2             String?   @db.VarChar(100)
-  WHATSAPP3             String?   @db.VarChar(100)
-  PRN1_COL1             Int?      @default(0)
-  PRN1_COL2             Int?      @default(0)
-  PRN1_COL3             Int?      @default(0)
-  PRN2_COL1             Int?      @default(0)
-  PRN2_COL2             Int?      @default(0)
-  PRN2_COL3             Int?      @default(0)
-  PRN_PDV               String?   @db.VarChar(100)
-  PRN_FISCAL            String?   @db.VarChar(100)
-  PRN_CODBARRAS1        String?   @db.VarChar(100)
-  PRN_CODBARRAS2        String?   @db.VarChar(100)
-  PRN1_CODSTR           String?   @db.VarChar(200)
-  AREADOCLIENTE         String?   @db.VarChar(100)
-  ANOTACOES_IMPRESSORAS String?   @db.LongText
-  ANOTACOES_CLIENTE     String?   @db.LongText
-  DT_EXPORTE            DateTime? @db.DateTime(0)
-  DT_UPDATE             DateTime? @db.DateTime(0)
+  ID_TBL_STATUS     Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE Int?      @default(0)
+  ID_LOJA           Int?      @default(1)
+  ID_USUARIO        Int?      @default(1)
+  ID_DEPARTAMENTO   Int?      @default(1)
+  STATUS            String    @db.VarChar(30)
+  DT_EXPORTE        DateTime? @db.Date
+  DT_UPDATE         DateTime? @db.Date
 }
 
 model tbl_system_config {
-  ID_CONFIG         Int       @id @default(autoincrement())
-  ID_WEBSITE_START  Int?
-  ID_USUARIO        Int?
-  QT_MIN_VERSAO     Int?      @default(5)
-  ID_SYSTEM_CLIENTE Int?
-  DT_UPDATE         DateTime? @db.DateTime(0)
-  DT_EXPORTE        DateTime? @db.DateTime(0)
-}
-
-model tbl_system_log_erro {
-  ID_LOG_ERRO           Int       @id @default(autoincrement())
-  ID_TIPO               Int?
+  ID_SYSTEM_CONFIG      Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE     Int?      @default(0)
+  ID_LOJA               Int?      @default(1)
   ID_DEPARTAMENTO       Int?      @default(1)
-  ID_USUARIO_SYSTEM     Int?
-  ID_SYSTEM_CFG_CLIENTE Int?
-  ID_DATABASE           Int?      @default(0)
-  ID_WEBSERVICE         Int?      @default(0)
-  IP                    String?   @db.VarChar(100)
-  VERSAO                String?   @db.VarChar(100)
-  PC_NAME               String?   @db.VarChar(100)
-  USUARIO_WINDOWS       String?   @db.VarChar(100)
-  ERRO                  String?   @db.VarChar(2000)
-  DETALHE               String?   @db.LongText
-  DT_CADASTRO           DateTime? @db.DateTime(0)
+  ID_USUARIO            Int?      @default(1)
+  FLAG_ARREDONDAR_PRECO Int?      @default(1)
+  DT_EXPORTE            DateTime? @db.Date
+  DT_UPDATE             DateTime? @db.Date
 }
 
 model tbl_system_log_login {
@@ -385,38 +118,9 @@ model tbl_system_login_cbb {
   DT_UPDATE       DateTime? @db.DateTime(0)
 }
 
-model tbl_system_parametro {
-  ID_SYSTEM            Int       @id
-  PARAMETRO_01         String?   @db.VarChar(200)
-  PARAMETRO_02         String?   @db.VarChar(200)
-  PARAMETRO_03         String?   @db.VarChar(200)
-  PARAMETRO_04         String?   @db.VarChar(200)
-  PARAMETRO_05         String?   @db.VarChar(200)
-  PARAMETRO_06         String?   @db.VarChar(200)
-  PARAMETRO_07         String?   @db.VarChar(200)
-  PARAMETRO_08         String?   @db.VarChar(200)
-  PARAMETRO_09         String?   @db.VarChar(200)
-  PARAMETRO_10         String?   @db.VarChar(200)
-  PARAMETRO_11         String?   @db.VarChar(200)
-  PARAMETRO_12         String?   @db.VarChar(200)
-  PARAMETRO_13         String?   @db.VarChar(200)
-  PARAMETRO_14         String?   @db.VarChar(200)
-  PARAMETRO_15         String?   @db.VarChar(200)
-  PARAMETRO_16         String?   @db.VarChar(200)
-  PARAMETRO_17         String?   @db.VarChar(200)
-  PARAMETRO_18         String?   @db.VarChar(200)
-  PARAMETRO_19         String?   @db.VarChar(200)
-  PARAMETRO_20         String?   @db.VarChar(200)
-  JSON_CONFIG          String?   @db.LongText
-  ANOTACOES_PARAMETROS String?   @db.LongText
-  DT_EXPORTE           DateTime? @db.DateTime(0)
-  DT_UPDATE            DateTime? @db.DateTime(0)
-}
-
 model tbl_system_usuario {
   ID_USUARIO_SYSTEM     Int       @id @default(autoincrement())
   ID_PESSOA             Int?
-  ID_UUID               String?   @db.VarChar(100)
   LOGIN                 String?   @db.VarChar(60)
   ID_SYSTEM_CFG_CLIENTE Int?
   ID_CATEGORIA          Int?
@@ -481,67 +185,1899 @@ model tbl_system_usuario {
   FLAG_SEX              Int?      @default(1) @db.SmallInt
   FLAG_SAB              Int?      @default(1) @db.SmallInt
   FLAG_DOM              Int?      @default(1) @db.SmallInt
+  ID_UUID               String?   @db.VarChar(100)
+  ROLE                  Int?      @default(1) @db.SmallInt
 
   @@index([ID_SYSTEM_CFG_CLIENTE], map: "tbl_system_usuario_ID_SYSTEM_CFG_CLIENTE_IDX")
   @@index([LOGIN], map: "tbl_system_usuario_LOGIN_IDX")
   @@index([SENHA], map: "tbl_system_usuario_SENHA_IDX")
 }
 
-model tbl_system_version {
-  ID_VERSION           Int       @id @default(autoincrement())
-  FILE_NAME_EXE        String?   @db.VarChar(100)
-  FILE_NAME_RAR        String?   @db.VarChar(100)
-  MAJOR_EXE            Int?      @default(0)
-  MINOR_EXE            Int?      @default(0)
-  RELEASE_EXE          Int?      @default(0)
-  BUILD_EXE            Int?      @default(0)
-  VERSION_EXE          String?   @db.VarChar(100)
-  SIZE_EXE             BigInt?
-  MD5_HASH_FILE_EXE    String?   @db.VarChar(100)
-  PATH_FILE_RAR_SERVER String?   @db.VarChar(300)
-  LINK_RAR_DOWNLOAD    String?   @db.VarChar(300)
-  ANOTACOES            String?   @db.LongText
-  DT_CADASTRO          DateTime? @db.DateTime(0)
-  DT_EXPORTE           DateTime? @db.DateTime(0)
-  DT_UPDATE            DateTime? @db.DateTime(0)
+model boleto_bancario {
+  ID          Int     @id @default(autoincrement())
+  DT_CADASTRO String? @db.VarChar(45)
 }
 
-model tbl_system_website {
-  ID_WEBSITE             Int       @id @default(autoincrement())
-  INATIVO                Int?      @default(0)
-  NOME                   String?   @db.VarChar(300)
+model tbl_boleto_bancario {
+  ID_BOLETO   Int       @id @default(autoincrement())
+  DT_CADASTRO DateTime? @db.DateTime(0)
+}
+
+model tbl_caixa_lancamento {
+  ID_TBL_CAIXA_LANCAMENTO Int       @id @default(autoincrement())
+  ID_GENERATED            BigInt?   @default(0)
+  ID_SYSTEM_CLIENTE       Int?      @default(0)
+  ID_STATUS               Int?      @default(0)
+  ID_DEPARTAMENTO         Int?      @default(1)
+  ID_LOJA                 Int?      @default(1)
+  CM7                     String?   @db.VarChar(300)
+  NOME                    String?   @db.VarChar(300)
+  DESCRICAO               String?   @db.VarChar(500)
+  VALOR                   Decimal?  @db.Decimal(18, 2)
+  COMPENSAR               DateTime? @db.Date
+  CANCELADO               Int?      @default(0) @db.SmallInt
+  TIPO                    String?   @db.VarChar(300)
+  ID_PEDIDO               Int?
+  ID_CLIENTE              Int?
+  ID_USUARIO              Int?
+  ID_PROTOCOLO            Int?      @default(0)
+  ID_VENDEDOR             Int?
+  ID_SETOR                Int?
+  DATA                    DateTime? @db.Date
+  HORA                    DateTime? @db.Time(0)
+  ID_GERADO               Int?
+  DATA_VENCIMENTO         DateTime? @db.Date
+  QT                      Int?
+  ID_PRODUTO              Int?
+  FLAG_CANTINA            Int?      @db.SmallInt
+  NF_NUMERO               Int?
+  NF_LOTE                 Int?
+  NF_SERIE                Int?
+  NF_STATUS               String?   @db.VarChar(100)
+  NF_CHAVE                String?   @db.VarChar(100)
+  NF_INFORMACAO           String?   @db.LongText
+  NF_RETORNO              String?   @db.LongText
+  NF_VALOR                Decimal?  @db.Decimal(18, 2)
+  ID_CEDENTE              Int?      @default(0)
+  TIPO_LANCAMENTO         String?   @db.VarChar(50)
+  OK                      Int?      @default(1) @db.SmallInt
+  VALOR_DOC               Decimal?  @default(0.00) @db.Decimal(18, 2)
+  PG_DATA                 DateTime? @db.Date
+  PG_HORA                 DateTime? @db.Time(0)
+  PG_ID_USUARIO           Int?
+  PG_TIPO                 String?   @db.VarChar(100)
+  PG_DESCRICAO            String?   @db.VarChar(200)
+  DOC_ESPECIE             String?   @db.VarChar(100)
+  DOC_NUMERO              Int?
+  INTEGRACAO              String?   @db.VarChar(60)
+  ID_LOTE                 Int?
+  PATH                    String?   @db.VarChar(500)
+  DT_EXPORTE              DateTime? @db.Date
+  DT_UPDATE               DateTime? @db.Date
+  DT_CADASTRO             DateTime? @db.DateTime(0)
+
+  @@index([DATA], map: "DATA")
+  @@index([ID_CLIENTE], map: "ID_CLIENTE")
+  @@index([ID_LOJA], map: "ID_LOJA")
+  @@index([ID_PEDIDO], map: "ID_PEDIDO")
+  @@index([ID_PROTOCOLO], map: "ID_PROTOCOLO")
+  @@index([ID_SYSTEM_CLIENTE], map: "ID_SYSTEM_CLIENTE")
+  @@index([ID_USUARIO], map: "ID_USUARIO")
+  @@index([ID_VENDEDOR], map: "ID_VENDEDOR")
+  @@index([PG_DATA], map: "PG_DATA")
+  @@index([COMPENSAR], map: "tbl_caixa_lancamento_COMPENSAR_IDX")
+  @@index([DATA], map: "tbl_caixa_lancamento_DATA_IDX")
+  @@index([ID_GENERATED], map: "tbl_caixa_lancamento_ID_GENERATED_IDX")
+}
+
+model tbl_categoria {
+  ID_CATEGORIA              Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE         Int?      @default(0)
+  ID_LOJA                   Int?      @default(1)
+  ID_USUARIO                Int?      @default(1)
+  ID_DEPARTAMENTO           Int?      @default(1)
+  CATEGORIA                 String?   @db.VarChar(300)
+  NIVEL                     Int?
+  ID_TBL_CADASTRO_TAXONOMIA Int?
+  PARENT_ID                 Int?
+  ID_TAXONOMIA              Int?
+  TAXONOMIA                 String?   @db.VarChar(100)
+  PATH_IMAGEM               String?   @db.VarChar(300)
+  ID_IMAGEM                 Int?
+  PATH_PAGE                 String?   @db.VarChar(300)
+  DATADOCADASTRO            DateTime? @db.DateTime(0)
+  DT_ALTERACAO              DateTime? @db.DateTime(0)
+  ORDEM                     Int?
+  QT_PRODUTOS               Int?
+  QT_PRODUTOS_MOVIMENTACAO  Int?
+  QT_PRODUTOS_ATIVOS        Int?      @default(0)
+  QT_PRODUTOS_INATIVOS      Int?      @default(0)
+  QT_PRODUTOS_TODOS         Int?      @default(0)
+  INATIVO                   Int?      @default(0) @db.SmallInt
+  ANOTACOES                 String?   @db.LongText
+  FLAG_WEBSITE              Int?      @default(1) @db.SmallInt
+  FLAG_COMPRAS              Int?      @default(1) @db.SmallInt
+  DT_EXPORTE                DateTime? @db.Date
+  DT_UPDATE                 DateTime? @db.Date
+
+  @@index([CATEGORIA], map: "CATEGORIA")
+  @@index([ID_SYSTEM_CLIENTE], map: "ID_SYSTEM_CLIENTE")
+  @@index([INATIVO], map: "INATIVO")
+  @@index([PARENT_ID], map: "PARENT_ID")
+}
+
+model tbl_categoria_rel {
+  ID_CATEGORIA      Int
+  ID_PRODUTO        Int
+  ID_SYSTEM_CLIENTE Int?      @default(0)
+  ID_LOJA           Int?      @default(1)
+  ID_DEPARTAMENTO   Int?      @default(1)
+  ID_USUARIO        Int?      @default(1)
+  DT_CADASTRO       DateTime? @db.DateTime(0)
+  DT_EXPORTE        DateTime? @db.Date
+  DT_UPDATE         DateTime? @db.Date
+
+  @@id([ID_CATEGORIA, ID_PRODUTO])
+  @@index([ID_SYSTEM_CLIENTE], map: "ID_SYSTEM_CLIENTE")
+}
+
+model tbl_departamento {
+  ID_DEPARTAMENTO   Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE Int?      @default(0)
+  ID_LOJA           Int?      @default(1)
+  ID_USUARIO        Int?      @default(1)
+  DEPARTAMENTO      String?   @db.VarChar(100)
+  INATIVO           Int?      @default(0) @db.SmallInt
+  DT_CADASTRO       DateTime? @db.DateTime(0)
+  DT_EXPORTE        DateTime? @db.Date
+  DT_UPDATE         DateTime? @db.Date
+}
+
+model tbl_entrada {
+  ID_TBL_ENTRADA       Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE    Int?      @default(1)
+  ID_LOJA              Int?      @default(1)
+  ID_DEPARTAMENTO      Int?      @default(1)
+  ID_USUARIO           Int?
+  ID_FORNECEDOR        Int?
+  ID_PESSOA            Int?
+  NUMERODANOTA         String?   @db.VarChar(100)
+  MODELO               String?   @db.VarChar(255)
+  ID_FRETE             Int?
+  ID_TIPO              Int?      @default(1)
+  ID_FRETADOR          Int?
+  DESCRICAO            String?   @db.VarChar(300)
+  DATA_ENTRADA_ESTOQUE DateTime? @db.Date
+  HORA_ENTRADA_ESTOQUE DateTime? @db.Time(0)
+  CAMBIO               Decimal?  @db.Decimal(18, 2)
+  VL_TOTAL_NOTA        Decimal?  @db.Decimal(18, 2)
+  VL_FRETE             Decimal?  @db.Decimal(18, 2)
+  VL_TOTAL_PRODUTO     Decimal?  @db.Decimal(18, 2)
+  IPI                  Decimal?  @db.Decimal(18, 2)
+  ICMS                 Decimal?  @db.Decimal(18, 2)
+  ID_EMPRESA           Int?
+  ESTOQUE              Int?      @default(0) @db.SmallInt
+  FISICO               Int?      @default(0) @db.SmallInt
+  ETIQUETA             Int?      @default(0) @db.SmallInt
+  TX_FRETE             Decimal?  @db.Decimal(18, 2)
+  ANOTACOES            String?   @db.LongText
+  HR_LANCAMENTO        DateTime? @db.Time(0)
+  DT_LANCAMENTO        DateTime? @db.Date
+  DATADOCADASTRO       DateTime? @db.DateTime(0)
+  DT_EXPORTE           DateTime? @db.Date
+  DT_UPDATE            DateTime? @db.Date
+}
+
+model tbl_entrada_movimento {
+  ID_TBL_ENTRADA_MOVIMENTO Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE        Int?      @default(0)
+  ID_LOJA                  Int?      @default(1)
+  ID_USUARIO               Int?      @default(1)
+  ID_DEPARTAMENTO          Int?      @default(1)
+  ID_ENTRADA               Int
+  ID_TBL_PRODUTO           Int?
+  ID_FORNECEDOR            Int?      @default(1)
+  ID_FRETADOR              Int?
+  QT                       Int?
+  QT_COMPRADA              Int?
+  QT_RECEBIDA              Int?
+  PRODUTO                  String?   @db.VarChar(300)
+  REF_FORNECEDOR           String?   @db.VarChar(100)
+  VL_NOTA                  Decimal   @default(0.00) @db.Decimal(18, 2)
+  VL_UNIT_DOLAR            Decimal?  @default(0.0000) @db.Decimal(18, 4)
+  VL_UNIT_REAL             Decimal?  @default(0.0000) @db.Decimal(18, 4)
+  VL_FRETE_REAL            Decimal?  @default(0.00) @db.Decimal(18, 2)
+  VL_FRETE_DOLAR           Decimal?  @default(0.00) @db.Decimal(18, 2)
+  VL_IPI                   Decimal   @default(0.00) @db.Decimal(18, 2)
+  VL_ICMS                  Decimal   @default(0.00) @db.Decimal(18, 2)
+  VL_ST                    Decimal   @default(0.00) @db.Decimal(18, 2)
+  VL_CUSTO                 Decimal?  @db.Decimal(18, 2)
+  VL_CUSTOREAL             Decimal?  @db.Decimal(18, 2)
+  TX_CUSTO                 Decimal?  @db.Decimal(18, 2)
+  VL_VENDA                 Decimal?  @db.Decimal(18, 2)
+  CAMBIO                   Decimal?  @db.Decimal(18, 2)
+  PORCENT                  Decimal?  @db.Decimal(18, 2)
+  ESTOQUE                  Int?      @db.SmallInt
+  FLUXO                    Int?      @db.SmallInt
+  DATA                     DateTime? @db.Date
+  HORA                     DateTime? @db.Time(0)
+  DATADOCADASTRO           DateTime? @db.DateTime(0)
+  IMPRESSAO                Int?      @db.SmallInt
+  ID_PRODUTO_FORNECEDOR    String?   @db.VarChar(60)
+  CST                      String?   @db.VarChar(100)
+  CFOP                     String?   @db.VarChar(100)
+  ID_EMPRESA               Int?
+  IPI                      Decimal?  @db.Decimal(18, 4)
+  ICMS                     Decimal?  @db.Decimal(18, 4)
+  VL_VENDA_ATACADO         Decimal?  @db.Decimal(18, 2)
+  VL_VENDA_VAREJO          Decimal?  @db.Decimal(18, 2)
+  TX_PRODUTO_LUCROATACADO  Decimal?  @db.Decimal(18, 2)
+  TX_PRODUTO_LUCROVAREJO   Decimal?  @db.Decimal(18, 2)
+  TX_PRODUTO_CUSTOREAL     Decimal?  @db.Decimal(18, 2)
+  NCM                      String?   @db.VarChar(100)
+  ORIGEM                   Int?
+  BASE_ICMS                Decimal?  @db.Decimal(18, 2)
+  BASE_IPI                 Decimal?  @db.Decimal(18, 2)
+  BASE_ST                  Decimal?  @db.Decimal(18, 2)
+  VL_TOTAL_IMPOSTO         Decimal?  @db.Decimal(18, 2)
+  VL_ULTIMO_CUSTO          Decimal?  @db.Decimal(18, 2)
+  TX_VARIACAO              Decimal?  @db.Decimal(18, 2)
+  VL_VENDA_CORPORATIVO     Decimal?  @db.Decimal(18, 2)
+  DT_EXPORTE               DateTime? @db.Date
+  DT_UPDATE                DateTime? @db.Date
+  DT_EXPEDICAO             DateTime? @db.DateTime(0)
+
+  @@index([ID_LOJA], map: "ID_LOJA")
+  @@index([ID_SYSTEM_CLIENTE], map: "ID_SYSTEM_CLIENTE")
+  @@index([ID_ENTRADA], map: "ID_TBL_ENTRADA")
+  @@index([ID_TBL_PRODUTO], map: "ID_TBL_PRODUTO")
+}
+
+model tbl_equipamento {
+  ID_EQUIPAMENTO    Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE Int?      @default(0)
+  ID_LOJA           Int?      @default(1)
+  ID_DEPARTAMENTO   Int?      @default(1)
+  ID_PEDIDO         Int?
+  ID_CLIENTE        Int?
+  ID_USUARIO        Int?
+  ID_TIPO           Int?
+  ID_MODELO         Int?
+  ID_MARCA          Int?
+  DT_CADASTRO       DateTime? @db.DateTime(0)
+  TIPO              String?   @db.VarChar(100)
+  EQUIPAMENTO       String?   @db.VarChar(300)
+  MODELO            String?   @db.VarChar(100)
+  MARCA             String?   @db.VarChar(80)
+  SETOR             String?   @db.VarChar(100)
+  PATRIMONIO        String?   @db.VarChar(80)
+  SERIAL            String?   @db.VarChar(80)
+  SERIAL2           String?   @db.VarChar(80)
+  SERIALCOMP1       String?   @db.VarChar(80)
+  SERIALCOMP2       String?   @db.VarChar(80)
+  ANOTACOES         String?   @db.LongText
+  DT_TERMINO        DateTime? @db.DateTime(0)
+  ID_STATUS         Int?
+  DT_ENTREGA        DateTime? @db.DateTime(0)
+  ID_STATUS_SERVICO Int?      @default(76)
+  TECNICO           String?   @db.VarChar(100)
+  SERIAL_NUMBER     String?   @db.VarChar(100)
+  SERIAL_NUMBER2    String?   @db.VarChar(100)
+  STATUS            String?   @db.VarChar(80)
+  DT_EXPORTE        DateTime? @db.Date
+  DT_UPDATE         DateTime? @db.Date
+
+  @@index([EQUIPAMENTO], map: "EQUIPAMENTO")
+  @@index([ID_CLIENTE], map: "ID_CLIENTE")
+  @@index([ID_LOJA], map: "ID_LOJA")
+  @@index([ID_PEDIDO], map: "ID_PEDIDO")
+  @@index([ID_SYSTEM_CLIENTE], map: "ID_SYSTEM_CLIENTE")
+  @@index([ID_USUARIO], map: "ID_USUARIO")
+}
+
+model tbl_financeiro_cedente {
+  ID_FINANCEIRO_CEDENTE Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE     Int?      @default(0)
+  ID_LOJA               Int?      @default(1)
+  ID_DEPARTAMENTO       Int?      @default(1)
+  ID_USUARIO            Int?      @default(1)
+  DATADOCADASTRO        DateTime? @db.DateTime(0)
+  NOME                  String?   @db.VarChar(200)
+  CATEGORIA             String?   @db.VarChar(300)
+  MODELO                String?   @db.VarChar(100)
+  DATA_CONTRATO         DateTime? @db.Date
+  DATA_TERMINO          DateTime? @db.Date
+  OBSERVACOES           String?   @db.LongText
+  ATIVO                 Int?      @default(1) @db.SmallInt
+  DT_EXPORTE            DateTime? @db.Date
+  DT_UPDATE             DateTime? @db.Date
+  CNPJ                  String?   @db.VarChar(100)
+}
+
+model tbl_financeiro_pg_formas {
+  ID_PG_FORMAS          Int
+  ID_SYSTEM_CLIENTE     Int       @default(0)
+  ID_LOJA               Int?      @default(1)
+  ID_USUARIO            Int?      @default(1)
+  ID_DEPARTAMENTO       Int?      @default(1)
+  DESCRICAO             String?   @db.VarChar(50)
+  ID_GRUPO              Int?      @default(0)
+  ID_LOCALIZACAO        Int?      @default(1)
+  TAXA                  Decimal?  @default(0.00) @db.Decimal(18, 2)
+  INATIVO               Int?      @default(0) @db.SmallInt
+  TX_FINANCEIRA         Decimal?  @default(0.00) @db.Decimal(18, 2)
+  TX_FINANCEIRA_ATAC    Decimal?  @default(0.00) @db.Decimal(18, 2)
+  TX_FINANCEIRA_VARE    Decimal?  @default(0.00) @db.Decimal(18, 2)
+  TX_DESCONTO           Decimal?  @default(0.00) @db.Decimal(18, 2)
+  TX_DESCONTO_ATAC      Decimal?  @default(0.00) @db.Decimal(18, 2)
+  TX_DESCONTO_VARE      Decimal?  @default(0.00) @db.Decimal(18, 2)
+  QT_PARCELA            Int?      @default(1) @db.SmallInt
+  FATOR_ATAC            Decimal?  @default(1.000000) @db.Decimal(18, 6)
+  FATOR_VARE            Decimal?  @default(1.000000) @db.Decimal(18, 6)
+  FLAG_TX_PRODUTO       Int?      @default(1) @db.SmallInt
+  PADRAO_LOJA_FISICA    Int?      @default(0) @db.SmallInt
+  PADRAO_ECOMMERCE      Int?      @default(0) @db.SmallInt
+  INDISPONIVEL_ATACADO  Int?      @default(0) @db.SmallInt
+  INDISPONIVEL_VAREJO   Int?      @default(0) @db.SmallInt
+  FLAG_APLICAR_DESCONTO Int?      @default(0) @db.SmallInt
+  ORDEM                 Int?      @default(0)
+  DATADOCADASTRO        DateTime? @db.DateTime(0)
+  ANOTACOES             String?   @db.LongText
+  DT_EXPORTE            DateTime? @db.Date
+  DT_UPDATE             DateTime? @db.Date
+
+  @@id([ID_PG_FORMAS, ID_SYSTEM_CLIENTE])
+}
+
+model tbl_fornecedor {
+  ID_FORNECEDOR          Int       @id @default(autoincrement())
   ID_SYSTEM_CLIENTE      Int?      @default(0)
-  ID_TIPO_COMMERCE       Int?      @default(1)
-  PRODUTO_TIPO           String?   @db.VarChar(300)
   ID_LOJA                Int?      @default(1)
-  DB_HOST                String?   @db.VarChar(100)
-  DB_NAME                String?   @db.VarChar(100)
-  DB_USER                String?   @db.VarChar(100)
-  DB_PASSWORD            String?   @db.VarChar(100)
-  WOO_KEY                String?   @db.VarChar(300)
-  WOO_SECRET             String?   @db.VarChar(300)
-  ID_LOCATION            Int?
-  FLAG_ESTOQUE_OFF       Int?      @default(1)
-  WEBSERVICE_NOME        String?   @db.VarChar(100)
-  WEBSERVICE_IP          String?   @db.VarChar(100)
-  WEBSERVICE_PORTA       Int?      @default(0)
-  DOMINIO                String?   @db.VarChar(200)
-  WEBSITE                String?   @db.VarChar(200)
-  PATH_LOGO              String?   @db.VarChar(500)
-  LOGIN_WEBMASTER        String?   @db.VarChar(100)
-  SENHA_WEBMASTER        String?   @db.VarChar(100)
-  EMAIL_WEBMASTER        String?   @db.VarChar(150)
-  TX_LOC_ATACADO         Decimal?  @default(0.000000) @db.Decimal(18, 6)
-  FLAG_TX_WEBSITE_VAREJO Int?      @default(0) @db.SmallInt
   ID_USUARIO             Int?      @default(1)
   ID_DEPARTAMENTO        Int?      @default(1)
-  TX_LOC_VAREJO          Decimal?  @default(0.000000) @db.Decimal(18, 6)
-  TX_WEBSITE_VAREJO      Decimal?  @default(0.000000000) @db.Decimal(18, 9)
-  ID_VENDEDOR            Int?      @default(0)
-  FLAG_EXPORTE           Int?      @default(0)
-  FLAG_LINK_IMAGEM       Int?      @default(0)
-  FLAG_LINK_PAGE         Int?      @default(0)
-  ACCESSKEY              String?   @db.VarChar(100)
-  JSON_CONFIG            String?   @db.LongText
-  DT_CADASTRO            DateTime? @db.DateTime(0)
+  ID_CATEGORIA           Int?      @default(1)
+  ID_TIPO                Int?      @default(1)
+  ID_IMAGEM              Int?
+  NOME                   String?   @db.VarChar(300)
+  FISIJURI               String?   @db.VarChar(10)
+  FONE1                  String?   @db.VarChar(200)
+  FONE2                  String?   @db.VarChar(200)
+  WHATAPP1               String?   @db.VarChar(200)
+  WHATAPP2               String?   @db.VarChar(200)
+  CONTATO1               String?   @db.VarChar(200)
+  CONTATO2               String?   @db.VarChar(200)
+  SETOR1                 String?   @db.VarChar(200)
+  SETOR2                 String?   @db.VarChar(200)
+  EMAIL1                 String?   @db.VarChar(200)
+  EMAIL2                 String?   @db.VarChar(200)
+  RAZAO_SOCIAL           String?   @db.VarChar(300)
+  CNPJ                   String?   @db.VarChar(100)
+  INSC_ESTADUAL          String?   @db.VarChar(100)
+  INSC_MUNICIPAL         String?   @db.VarChar(100)
+  NOME_FANTASIA          String?   @db.VarChar(200)
+  DATA_CNPJ              DateTime? @db.Date
+  NOME_RESPONSAVEL       String?   @db.VarChar(200)
+  CARGO_RESPOSNAVEL      String?   @db.VarChar(200)
+  ATIVIDADE_PRINCIPAL    String?   @db.VarChar(200)
+  ATIVIDADES_SECUNDARIA1 String?   @db.VarChar(200)
+  ATIVIDADES_SECUNDARIA2 String?   @db.VarChar(200)
+  ATIVIDADES_SECUNDARIA3 String?   @db.VarChar(200)
+  ATIVIDADES_SECUNDARIA4 String?   @db.VarChar(200)
+  ATIVIDADES_SECUNDARIA5 String?   @db.VarChar(200)
+  NATUREZA_JURIDICA      String?   @db.VarChar(200)
+  OBJETIVO_MISSAO        String?   @db.VarChar(300)
+  MISSAO_VISAO           String?   @db.LongText
+  PRIMEIRO_NOME          String?   @db.VarChar(100)
+  CARGO                  String?   @db.VarChar(200)
+  ID_RESPONSAVEL         Int?
+  CPF                    String?   @db.VarChar(100)
+  RG                     String?   @db.VarChar(100)
+  GENERO                 String?   @db.Char(100)
+  SOBRENOME              String?   @db.VarChar(100)
+  NOME_DO_MEIO           String?   @db.VarChar(100)
+  TRATAMENTO             String?   @db.VarChar(50)
+  TRABALHANAEMPRESA      String?   @db.VarChar(200)
+  FORMACAOACADEMICA      String?   @db.VarChar(200)
+  FORMACAOATUAL          String?   @db.VarChar(200)
+  ESPECIALIZACAO         String?   @db.VarChar(200)
+  INSTITUICAODEENSINO    String?   @db.VarChar(200)
+  CONJUGUE               String?   @db.VarChar(200)
+  DATADONASCIMENTO       DateTime? @db.Date
+  CEP                    String?   @db.VarChar(100)
+  ENDERECO               String?   @db.VarChar(300)
+  ENDERECO_NUMERO        String?   @db.VarChar(100)
+  COMPLEMENTO            String?   @db.VarChar(300)
+  BAIRRO                 String?   @db.VarChar(200)
+  CIDADE                 String?   @db.VarChar(200)
+  UF                     String?   @db.VarChar(100)
+  REGIAO_PAIS            String?   @db.VarChar(200)
+  PAIS                   String?   @db.VarChar(200)
+  COD_MUNICIPIO          Int?      @default(0)
+  COD_UF                 Int?      @default(0)
+  WEBSITE                String?   @db.VarChar(300)
+  SKYPE                  String?   @db.VarChar(200)
+  FACEBOOK               String?   @db.VarChar(200)
+  TWITTER                String?   @db.VarChar(200)
+  FRETADOR               Int?      @db.SmallInt
+  DT_ULTIMA_COMPRA       DateTime? @db.Date
+  DATADOCADASTRO         DateTime? @db.DateTime(0)
+  ANOTACOES              String?   @db.LongText
+  DT_EXPORTE             DateTime? @db.Date
+  DT_UPDATE              DateTime? @db.Date
+}
+
+model tbl_gen_id_pedido {
+  ID_GENERATOR Int     @id @default(autoincrement())
+  KEYVALUE     String? @db.VarChar(100)
+}
+
+model tbl_hist_pedido {
+  ID_HISTORICO         Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE    Int?      @default(0)
+  ID_LOJA              Int?      @default(1)
+  ID_DEPARTAMENTO      Int?      @default(1)
+  ID_PEDIDO            Int
+  ID_USUARIO           Int?
+  ID_CLIENTE           Int?
+  ID_VENDEDOR          Int?
+  ID_LOCATION          Int?
+  ID_PG_FORMA          Int?
+  ID_STATUS_ORCAMENTO  Int?
+  ID_STATUS_PEDIDO     Int?
+  ID_STATUS_FINANCEIRO Int?
+  ID_STATUS_ESTOQUE    Int?
+  ID_STATUS_ENTREGA    Int?
+  ID_LOCALIZACAO_PED   Int?
+  HISTORICO            String?   @db.VarChar(700)
+  OPERACAO             String?   @db.VarChar(100)
+  USUARIO              String?   @db.VarChar(300)
+  VL_ACRESCIMO         Decimal?  @default(0.00) @db.Decimal(18, 2)
+  CODIGOP              String?   @db.VarChar(20)
+  ID_PROTOCOLO         Int?      @default(0)
+  QT_PARCELA           Int?
+  VL_FRETE             Decimal?  @db.Decimal(18, 2)
+  VL_DESCONTO          Decimal?  @db.Decimal(18, 2)
+  VL_PARCELA           Decimal?  @db.Decimal(18, 2)
+  VL_TOTAL_PARCELADO   Decimal?  @db.Decimal(18, 2)
+  DATADOCADASTRO       DateTime? @db.DateTime(0)
+  ID_STATUS            Int?
+  NOTA                 String?   @db.VarChar(500)
+  DATAHORA             DateTime? @db.DateTime(0)
+  DT_EXPORTE           DateTime? @db.Date
+  DT_UPDATE            DateTime? @db.Date
+
+  @@index([DATADOCADASTRO], map: "tbl_hist_pedido_DATADOCADASTRO_IDX")
+  @@index([DATAHORA], map: "tbl_hist_pedido_DATAHORA_IDX")
+  @@index([ID_PEDIDO], map: "tbl_hist_pedido_ID_PEDIDO_IDX")
+  @@index([ID_SYSTEM_CLIENTE], map: "tbl_hist_pedido_ID_SYSTEM_CLIENTE_IDX")
+  @@index([ID_USUARIO], map: "tbl_hist_pedido_ID_USUARIO_IDX")
+  @@index([ID_VENDEDOR], map: "tbl_hist_pedido_ID_VENDEDOR_IDX")
+}
+
+model tbl_hist_pedido_mov {
+  ID_PED_MOV_HIST   Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE Int?      @default(0)
+  ID_LOJA           Int?      @default(1)
+  ID_DEPARTAMENTO   Int?      @default(1)
+  ID_MOVIMENTO      Int?
+  ID_PEDIDO         Int?
+  ID_CLIENTE        Int?
+  ID_VENDEDOR       Int?
+  ID_USUARIO        Int?
+  ID_PRODUTO        Int?
+  ID_PG_FORMA       Int?
+  QT                Int?      @default(0)
+  OPERACAO          String?   @db.VarChar(300)
+  HISTORICO         String?   @db.VarChar(700)
+  USUARIO           String?   @db.VarChar(300)
+  DESCRICAO         String?   @db.VarChar(200)
+  ID_STATUS_PEDIDO  String?   @db.VarChar(20)
+  VL_UNITARIO       Decimal?  @db.Decimal(18, 2)
+  VL_DESCONTO       Decimal?  @default(0.00) @db.Decimal(18, 2)
+  VL_DESCONTO_ADM   Decimal?  @default(0.00) @db.Decimal(18, 2)
+  QT_ESTORNADA      Int?      @default(0)
+  STATUS            String?   @db.VarChar(100)
+  DT_ESTORNO        DateTime? @db.DateTime(0)
+  DT_EXCLUIDO       DateTime? @db.DateTime(0)
+  ESTORNO           Int?      @default(0) @db.SmallInt
+  PROMOCAO          Int?      @default(0) @db.SmallInt
+  DATADOCADASTRO    DateTime? @db.DateTime(0)
+  ANOTACOES         String?   @db.LongText
+  DT_EXPORTE        DateTime? @db.Date
+  DT_UPDATE         DateTime? @db.Date
+
+  @@index([DATADOCADASTRO], map: "tbl_hist_pedido_mov_DATADOCADASTRO_IDX")
+  @@index([ID_MOVIMENTO], map: "tbl_hist_pedido_mov_ID_MOVIMENTO_IDX")
+  @@index([ID_PEDIDO], map: "tbl_hist_pedido_mov_ID_PEDIDO_IDX")
+  @@index([ID_SYSTEM_CLIENTE], map: "tbl_hist_pedido_mov_ID_SYSTEM_CLIENTE_IDX")
+}
+
+model tbl_hist_prod_estoque {
+  ID_HIST_ESTOQUE   Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE Int?      @default(0)
+  ID_LOJA           Int?      @default(1)
+  ID_DEPARTAMENTO   Int?      @default(1)
+  ID_USUARIO        Int?      @default(1)
+  ID_PRODUTO        Int?
+  STQ_ANTERIOR      Int?      @default(0)
+  STQ_ADICIONADO    Int?      @default(0)
+  STQ_SUBTRAIDO     Int?      @default(0)
+  STQ_ALTERADO      Int?      @default(0)
+  STQ_DEPOIS        Int?      @default(0)
+  OPERACAO          String?   @db.VarChar(100)
+  LOJA              String?   @db.VarChar(100)
+  USUARIO           String?   @db.VarChar(300)
+  ID_ENTRADA        Int?      @default(0)
+  ID_PEDIDO         Int?      @default(0)
+  HISTORICO         String?   @db.VarChar(700)
+  DT_CADASTRO       DateTime? @db.DateTime(0)
+  DT_EXPORTE        DateTime? @db.Date
+  DT_UPDATE         DateTime? @db.Date
+
+  @@index([DT_CADASTRO], map: "tbl_hist_prod_estoque_DT_CADASTRO_IDX")
+  @@index([ID_PRODUTO], map: "tbl_hist_prod_estoque_ID_PRODUTO_IDX")
+  @@index([ID_SYSTEM_CLIENTE], map: "tbl_hist_prod_estoque_ID_SYSTEM_CLIENTE_IDX")
+}
+
+model tbl_hist_prod_fisico {
+  ID_HISTORICO_FISICO   Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE     Int?      @default(0)
+  ID_LOJA               Int?      @default(1)
+  ID_DEPARTAMENTO       Int?      @default(1)
+  ID_TBL_PRODUTO_FISICO Int
+  ID_PRODUTO            Int?
+  ID_ENTRADA            Int?      @default(0)
+  ID_ENTRADA_MOVIMENTO  Int?      @default(0)
+  ID_PEDIDO             Int?      @default(0)
+  ID_PEDIDO_MOVIMENTO   Int?      @default(0)
+  ID_CLIENTE            Int?
+  ID_LOCALIZACAO        Int?
+  ID_EMPRESA            Int?
+  ID_STATUS             Int?      @default(0)
+  ID_USUARIO            Int?
+  DATA                  DateTime? @db.Date
+  ESTOQUE               Int?      @default(1) @db.SmallInt
+  VL_CUSTO              Decimal?  @db.Decimal(18, 2)
+  HISTORICO             String?   @db.LongText
+  USUARIO               String?   @db.VarChar(300)
+  PRODUTO               String?   @db.VarChar(200)
+  COD_BARRAS            String?   @db.VarChar(100)
+  N_SERIE               String?   @db.VarChar(100)
+  NF_ENTRADA            String?   @db.VarChar(100)
+  NF_SAIDA              String?   @db.VarChar(100)
+  SERVER                String?   @db.VarChar(100)
+  GARANTIA              DateTime? @db.Date
+  ESTORNO               Int?      @default(0) @db.SmallInt
+  RMA                   Int?      @db.SmallInt
+  FINAL_GARANTIA        Int?
+  DATA_RETIRADA         DateTime? @db.Date
+  HORA_RETIRADA         DateTime? @db.Time(0)
+  DT_PEDIDO             DateTime? @db.DateTime(0)
+  DT_ESTORNO            DateTime? @db.DateTime(0)
+  VL_VENDA              Decimal?  @db.Decimal(18, 2)
+  ID_VENDEDOR           Int?
+  DT_RETIRADA           DateTime? @db.Date
+  HORA                  DateTime? @db.Time(0)
+  ID_HISTORICO          Int?
+  ID_STATUSRMA          Int?      @default(0) @db.SmallInt
+  TAMANHO               String?   @db.VarChar(100)
+  MARCA                 String?   @db.VarChar(200)
+  DT_CADASTRO           DateTime? @db.DateTime(0)
+  DESCRICAO             String?   @db.VarChar(200)
+  FLAG_IMP_HIST         Int?      @default(0) @db.SmallInt
+  DT_EXPORTE            DateTime? @db.Date
+  DT_UPDATE             DateTime? @db.Date
+
+  @@index([DT_CADASTRO], map: "tbl_hist_prod_fisico_DT_CADASTRO_IDX")
+  @@index([ID_ENTRADA], map: "tbl_hist_prod_fisico_ID_ENTRADA_IDX")
+  @@index([ID_ENTRADA_MOVIMENTO], map: "tbl_hist_prod_fisico_ID_ENTRADA_MOVIMENTO_IDX")
+  @@index([ID_PEDIDO], map: "tbl_hist_prod_fisico_ID_PEDIDO_IDX")
+  @@index([ID_PEDIDO_MOVIMENTO], map: "tbl_hist_prod_fisico_ID_PEDIDO_MOVIMENTO_IDX")
+  @@index([ID_PRODUTO], map: "tbl_hist_prod_fisico_ID_PRODUTO_IDX")
+  @@index([ID_SYSTEM_CLIENTE], map: "tbl_hist_prod_fisico_ID_SYSTEM_CLIENTE_IDX")
+}
+
+model tbl_hist_prod_preco {
+  ID_HIST_PRECO     Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE Int?      @default(0)
+  ID_LOJA           Int?      @default(1)
+  ID_USUARIO        Int?      @default(1)
+  ID_DEPARTAMENTO   Int?      @default(1)
+  ID_PRODUTO        Int?      @default(0)
+  HISTORICO         String?   @db.VarChar(700)
+  LOJA              String?   @db.VarChar(50)
+  USUARIO           String?   @default("system") @db.VarChar(300)
+  OPERACAO          String?   @default("GERAL") @db.VarChar(100)
+  VL_ATACADO        Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO    Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_OURO           Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_PRATA          Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_BRONZE         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  DECONTO1          Decimal?  @db.Decimal(15, 6)
+  DECONTO2          Decimal?  @db.Decimal(15, 6)
+  DECONTO3          Decimal?  @db.Decimal(15, 6)
+  QUANTIDADE1       Decimal?  @db.Decimal(15, 6)
+  QUANTIDADE2       Decimal?  @db.Decimal(15, 6)
+  QUANTIDADE3       Decimal?  @db.Decimal(15, 6)
+  DT_CADASTRO       DateTime? @db.DateTime(0)
+  DT_EXPORTE        DateTime? @db.Date
+  DT_UPDATE         DateTime? @db.Date
+
+  @@index([DT_CADASTRO], map: "tbl_hist_prod_preco_DT_CADASTRO_IDX")
+  @@index([ID_LOJA], map: "tbl_hist_prod_preco_ID_LOJA_IDX")
+  @@index([ID_PRODUTO], map: "tbl_hist_prod_preco_ID_PRODUTO_IDX")
+  @@index([ID_SYSTEM_CLIENTE], map: "tbl_hist_prod_preco_ID_SYSTEM_CLIENTE_IDX")
+  @@index([ID_USUARIO], map: "tbl_hist_prod_preco_ID_USUARIO_IDX")
+}
+
+model tbl_keyvalor {
+  ID_KEYVALOR       Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE Int?      @default(0)
+  ID_LOJA           Int?      @default(1)
+  ID_USUARIO        Int?      @default(1)
+  ID_DEPARTAMENTO   Int?      @default(1)
+  ID_PARENT         Int?      @default(0)
+  ID_ORDER          Int?      @default(0)
+  ID_TIPO           Int?      @default(0)
+  ID_CATEGORIA      Int?      @default(0)
+  ID_MODULO         Int?      @default(0)
+  ID_CADASTRO       Int?      @default(0)
+  ID_RESPONSAVEL    Int?      @default(0)
+  ID_STATUS         Int?      @default(0)
+  CHAVE             String?   @db.VarChar(500)
+  VALOR             String?   @db.VarChar(1000)
+  NOTAS             String?   @db.LongText
+  INATIVO           Int?      @default(0)
+  DT_FINAL          DateTime? @db.DateTime(0)
+  DT_INICIO         DateTime? @db.DateTime(0)
+  DT_CADASTRO       DateTime? @db.DateTime(0)
+  DT_EXPORTE        DateTime? @db.Date
+  DT_UPDATE         DateTime? @db.Date
+}
+
+model tbl_keyvalor_categoria {
+  ID_CATEGORIA      Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE Int?      @default(0)
+  ID_LOJA           Int?      @default(1)
+  ID_USUARIO        Int?      @default(1)
+  ID_DEPARTAMENTO   Int?      @default(1)
+  ID_ORDER          Int?      @default(1)
+  ID_PARENT         Int?      @default(0)
+  ID_TIPO           Int?      @default(1)
+  ID_MODULO         Int?      @default(0)
+  CATEGORIA         String?   @db.VarChar(500)
+  NOTAS             String?   @db.LongText
+  INATIVO           Int?      @default(0)
+  DT_CADASTRO       DateTime? @db.DateTime(0)
+  DT_EXPORTE        DateTime? @db.Date
+  DT_UPDATE         DateTime? @db.Date
+}
+
+model tbl_localizacao {
+  ID_TBL_LOCALIZACAO Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE  Int?      @default(0)
+  ID_LOJA            Int?      @default(1)
+  ID_USUARIO         Int?      @default(1)
+  ID_DEPARTAMENTO    Int?      @default(1)
+  DESCRICAO          String?   @db.VarChar(30)
+  SETOR              String?   @db.VarChar(30)
+  DT_EXPORTE         DateTime? @db.Date
+  DT_UPDATE          DateTime? @db.Date
+}
+
+model tbl_modulo {
+  ID_TBL_MODULO     Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE Int?      @default(0)
+  ID_LOJA           Int?      @default(1)
+  ID_USUARIO        Int?      @default(1)
+  ID_DEPARTAMENTO   Int?      @default(1)
+  NOMEDOMODULO      String?   @db.VarChar(20)
+  DT_EXPORTE        DateTime? @db.Date
+  DT_UPDATE         DateTime? @db.Date
+}
+
+model tbl_mov_aux {
+  id_produto Int  @id
+  QT_MOV     Int?
+}
+
+model tbl_pedido {
+  ID_TBL_PEDIDO        Int       @id @default(autoincrement())
+  ID_GENERATED         BigInt?   @default(0)
+  ID_SYSTEM_CLIENTE    Int?      @default(1)
+  ID_USUARIO           Int?      @default(1)
+  ID_DEPARTAMENTO      Int?      @default(1)
+  ID_TBL_CLIENTE       Int?      @default(0)
+  ID_TBL_VENDEDOR      Int?      @default(9020)
+  ID_TBL_TABELA        Int?      @default(0)
+  ID_TBL_PROTOCOLO     Int?      @default(0)
+  ID_PROTOCOLO         Int?
+  ID_TBL_ENTREGA       Int?      @default(0)
+  ID_TBL_PEDIDO_IP     Int?      @default(0)
+  ID_TBL_USUARIO       Int?      @default(0)
+  ID_ORDER             Int?      @default(0)
+  ID_LOCATION          Int?      @default(1) @db.SmallInt
+  ID_LOCALIZACAO_PED   Int?      @default(1)
+  ID_STATUS_PEDIDO     Int?      @default(22)
+  ID_STATUS_FINANCEIRO Int?      @default(0)
+  ID_STATUS_ENTREGA    Int?      @default(67)
+  ID_STATUS_ESTOQUE    Int?      @default(0)
+  ID_TIPO_FRETE        Int?      @default(1)
+  ID_FORMATO_ENVIO     Int?      @default(1)
+  ID_LOJA              Int?      @default(1)
+  ID_TIPO              Int?      @default(1)
+  ID_STATUS_ORCAMENTO  Int?
+  ID_STATUS_RMA        Int?      @default(0)
+  ID_PG_FORMA          Int?      @default(1)
+  ID_FRM_ENTREGA       Int?      @default(0)
+  ID_RMA               Int?      @default(0)
+  PRN                  Int?      @default(0)
+  PRAZO_ENTREGA_DIA    Int?
+  QT_VOLUME            Int?      @default(1)
+  QT_PARCELA           Int?      @default(1)
+  VL_FRETE_ENTREGA     Decimal?  @default(0.00) @db.Decimal(15, 2)
+  PESO_FRETE_GR        Int?
+  ALTURA_VOLUME        Int?      @default(0)
+  LARGURA_VOLUME       Int?      @default(0)
+  COMPRIMENTO_VOLUME   Int?      @default(0)
+  ID_EQUIPAMENTO       Int?
+  ID_TIPO_ENTREGA      Int?
+  DATAENVIO_FRETE      DateTime? @db.Date
+  DATAENTREGA_FRETE    DateTime? @db.Date
+  USUARIO_ESTOQUE      String?   @db.VarChar(300)
+  PRIORIDADE           String?   @db.VarChar(100)
+  CODIGO_CORREIOS      String?   @db.VarChar(100)
+  USUARIO_ESTORNO      String?   @db.VarChar(300)
+  STATUS_PEDIDO        String?   @default("ORCAMENTO") @db.VarChar(20)
+  STATUS_FINANCEIRO    String?   @default("PENDENTE") @db.VarChar(20)
+  STATUS_ENTREGA       String?   @db.VarChar(20)
+  USUARIO              String?   @db.VarChar(100)
+  STATUS_ESTOQUE       String?   @default("EM ABERTO") @db.VarChar(100)
+  USUARIO_ENTREGA      String?   @db.VarChar(100)
+  CODIGOP              String?   @db.VarChar(20)
+  TX_DESCONTO_CODP     Decimal?  @default(0.00) @db.Decimal(15, 2)
+  VL_FATOR             Decimal?  @default(1.000000) @db.Decimal(18, 6)
+  TX_PG_FINANCEIRA     Decimal?  @default(0.0000) @db.Decimal(18, 4)
+  TX_PG_DESCONTO       Decimal?  @default(0.0000) @db.Decimal(18, 4)
+  VL_FRETE             Decimal?  @default(0.0000) @db.Decimal(18, 4)
+  VL_DESCONTO          Decimal?  @default(0.00) @db.Decimal(18, 2)
+  VL_ACRESCIMO         Decimal?  @default(0.00) @db.Decimal(18, 2)
+  VL_PARCELA           Decimal?  @default(0.00) @db.Decimal(18, 2)
+  INATIVO              Int?      @default(0) @db.SmallInt
+  FLAG_VENDA_ATACADO   Int?      @default(0) @db.SmallInt
+  QT_ESTORNADA         Int?      @default(0)
+  DATA                 DateTime? @db.Date
+  HORA                 DateTime? @db.Time(0)
+  DATA_LIBERACAO       DateTime? @db.Date
+  DATA_VENDA           DateTime? @db.Date
+  DATA_PEDIDO          DateTime? @db.Date
+  DATA_ESTORNO         DateTime? @db.Date
+  DATA_RETIRADA        DateTime? @db.Date
+  DATA_PAGAMENTO       DateTime? @db.Date
+  DATA_ESTOQUE         DateTime? @db.Date
+  DATA_VALIDADE_ORC    DateTime? @db.Date
+  DATA_ORCAMENTO       DateTime? @db.DateTime(0)
+  DATADOCADASTRO       DateTime? @db.DateTime(0)
+  OBSERVACOES          String?   @db.LongText
+  ANOTACOES            String?   @db.LongText
+  ID_USUARIO_ENTREGA   Int?
+  DATA_ENTREGA         DateTime? @db.DateTime(0)
+  DT_VENDA_FINAL       DateTime? @db.DateTime(0)
+  ENTRADA              String?   @db.LongText
+  ID_FISICO_RMA        Int?      @default(0)
+  DEFEITO              String?   @db.LongText
+  LAUDO                String?   @db.LongText
+  NFE_CHAVE            String?   @db.VarChar(44)
+  NFE_LOTE             Int?
+  NFE_NUMERO           Int?
+  NFE_OPERACAO         String?   @db.VarChar(60)
+  NFE_CHAVE_DEVOLUCAO  String?   @db.VarChar(44)
+  EQUIPAMENTO          String?   @db.VarChar(80)
+  MODELO               String?   @db.VarChar(80)
+  SERIAL               String?   @db.VarChar(80)
+  TECNICO              String?   @db.VarChar(100)
+  ID_STATUS_OS         Int?
+  STATUS_OS            String?   @db.VarChar(80)
+  TERCEIRIZADO         String?   @db.LongText
+  DT_TRANFERENCIA      DateTime? @db.DateTime(0)
+  NFSE                 Int?
+  FLAG_COMISSAO        Int?      @default(1) @db.SmallInt
+  ID_TRANSPORTADORA    Int?      @default(1)
+  INFO_NOTAFISCAL      String?   @db.LongText
+  DT_EXPORTE           DateTime? @db.Date
+  DT_UPDATE            DateTime? @db.Date
+  ESTOQUE_ANTERIOR     Int?
+  ID_OPERATION         Int?      @default(0)
+
+  @@index([DATA], map: "DATA")
+  @@index([DATA_LIBERACAO], map: "DATA_LIBERACAO")
+  @@index([DATA_PEDIDO], map: "DATA_PEDIDO")
+  @@index([ID_FORMATO_ENVIO], map: "ID_FORMATO_ENVIO")
+  @@index([ID_LOCALIZACAO_PED], map: "ID_LOCALIZACAO_PED")
+  @@index([ID_LOJA], map: "ID_LOJA")
+  @@index([ID_ORDER], map: "ID_ORDER")
+  @@index([ID_PG_FORMA], map: "ID_PG_FORMA")
+  @@index([ID_STATUS_ENTREGA], map: "ID_STATUS_ENTREGA")
+  @@index([ID_STATUS_ESTOQUE], map: "ID_STATUS_ESTOQUE")
+  @@index([ID_STATUS_FINANCEIRO], map: "ID_STATUS_FINANCEIRO")
+  @@index([ID_STATUS_PEDIDO], map: "ID_STATUS_PEDIDO")
+  @@index([ID_STATUS_RMA], map: "ID_STATUS_RMA")
+  @@index([ID_SYSTEM_CLIENTE], map: "ID_SYSTEM_CLIENTE")
+  @@index([ID_TBL_CLIENTE], map: "ID_TBL_CLIENTE")
+  @@index([ID_TBL_VENDEDOR], map: "ID_TBL_VENDEDOR")
+  @@index([ID_TIPO_FRETE], map: "ID_TIPO_FRETE")
+  @@index([PRN], map: "PRN")
+  @@index([DATA_VENDA], map: "tbl_pedido_DATA_VENDA_IDX")
+  @@index([ID_GENERATED], map: "tbl_pedido_ID_GENERATED_IDX")
+  @@index([ID_OPERATION], map: "tbl_pedido_ID_OPERATION_IDX")
+  @@index([ID_TBL_PEDIDO_IP], map: "tbl_pedido_ID_TBL_PEDIDO_IP_IDX")
+  @@index([ID_TBL_PROTOCOLO], map: "tbl_pedido_ID_TBL_PROTOCOLO_IDX")
+}
+
+model tbl_pedido_config {
+  ID_PEDIDO_CONFIG  Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE Int?      @default(0)
+  ID_LOJA           Int?      @default(1)
+  ID_USUARIO        Int?      @default(1)
+  ID_DEPARTAMENTO   Int?      @default(1)
+  ID_LOCATION       Int?
+  ID_VENDEDOR       Int?
+  ID_ST_ORCAMENTO   Int?
+  ID_ST_PEDIDO      Int?      @default(22)
+  ID_ST_ENTREGA     Int?
+  ID_ST_ESTOQUE     Int?      @default(0)
+  ID_ST_FINANCEIRO  Int?      @default(0)
+  ID_PG_FORMA       Int?
+  ID_TP_FRETE       Int?
+  ID_FM_ENVIO       Int?
+  AJUSTE_MINIMO     Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  PZ_ENTREGA_DIA    Int?
+  PZ_VALIDADE_DIA   Int?
+  VL_DELIVERY       Decimal?  @db.Decimal(18, 2)
+  DT_CADASTRO       DateTime? @db.DateTime(0)
+  OBSERVACOES       String?   @db.LongText
+  DT_EXPORTE        DateTime? @db.Date
+  DT_UPDATE         DateTime? @db.Date
+}
+
+model tbl_pedido_movimento {
+  ID_TBL_PEDIDO_MOVIMENTO Int       @id @default(autoincrement())
+  ID_GENERATED            BigInt?   @default(0)
+  ID_SYSTEM_CLIENTE       Int?      @default(0)
+  ID_LOJA                 Int?      @default(1)
+  ID_USUARIO              Int?      @default(1)
+  ID_DEPARTAMENTO         Int?      @default(1)
+  ID_TBL_PEDIDO           Int?      @default(1)
+  ID_TBL_USUARIO          Int?      @default(1)
+  ID_TBL_PRODUTO          Int?      @default(1)
+  ID_TBL_PROTOCOLO        Int?      @default(1)
+  ID_PROTOCOLO            Int?      @default(1)
+  ID_MARCA                Int?      @default(1)
+  ID_TIPO                 Int?      @default(1)
+  ID_CLIENTE              Int?      @default(1)
+  ID_FAMILIA              Int?      @default(1)
+  ID_GRUPO                Int?      @default(1)
+  ID_SUBGRUPO             Int?      @default(1)
+  ID_VENDEDOR             Int?
+  ID_FISICO               Int?
+  ID_RMA                  Int?      @default(0)
+  ID_PG_FORMA             Int?
+  ID_MOVIMENTO_WEB        String?   @db.VarChar(100)
+  QT                      Int?      @default(0)
+  QT_ESTORNADA            Int?      @default(0)
+  ID_EQUIPAMENTO          Int?
+  VL_UNITARIO             Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_TOTAL                Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_DESCONTO             Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_DESCONTO_ADM         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_FRETE                Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_UNITARIO_REF         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CUSTO_PRODUTO        Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  ICMS_BC                 Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  ICMS_VALOR              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  ICMS_ALIQUOTA           Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  ST_BC                   Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  ST_VALOR                Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  ST_ALIQUOTA             Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  IPI_BC                  Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  IPI_VALOR               Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  IPI_ALIQUOTA            Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_NFE_DESC             Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_DESPESAS_ADICIONAIS  Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_SEGURO               Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ACRESCIMO            Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  DESCRICAO               String?   @db.VarChar(300)
+  STATUS_EXPEDICAO        String?   @db.VarChar(100)
+  SETOR_RMA               String?   @db.VarChar(20)
+  STATUS                  String?   @db.VarChar(20)
+  CODIGOP                 String?   @db.VarChar(10)
+  MODELO                  String?   @db.VarChar(100)
+  PROMO                   Int?      @db.SmallInt
+  ESTORNO                 Int?      @default(0) @db.SmallInt
+  PROMOCAO                Int?      @default(0) @db.SmallInt
+  INATIVO                 Int?      @default(0) @db.SmallInt
+  HORA                    DateTime? @db.Time(0)
+  DATA                    DateTime? @db.Date
+  DATADOCADASTRO          DateTime? @db.DateTime(0)
+  DT_ESTORNO              DateTime? @db.DateTime(0)
+  DT_RETORNO              DateTime? @db.DateTime(0)
+  DT_EXPEDICAO            DateTime? @db.DateTime(0)
+  ENTRADA                 String?   @db.LongText
+  ANOTACOES               String?   @db.LongText
+  QT_FISICA_EXPEDIDA      Int?      @default(0)
+  FLAG_EMISSAO            Int?      @default(0) @db.SmallInt
+  CFOP                    String?   @db.VarChar(4)
+  CST                     String?   @db.VarChar(4)
+  IPI_CENQ                String?   @default("999") @db.VarChar(5)
+  IPI_CST                 String?   @default("99") @db.VarChar(5)
+  NUMERO_NFE              Int?      @default(0)
+  GARANTIA_DIAS           Int?      @default(0)
+  VL_ATACADO              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO          Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO               Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_OURO                 Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_PRATA                Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_BRONZE               Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TXT_DESC1               String?   @db.VarChar(50)
+  TXT_DESC2               String?   @db.VarChar(50)
+  TXT_DESC3               String?   @db.VarChar(50)
+  VL_DESC1                Float?    @default(0) @db.Float
+  VL_DESC2                Float?    @default(0) @db.Float
+  VL_DESC3                Float?    @default(0) @db.Float
+  DT_EXPORTE              DateTime? @db.Date
+  DT_UPDATE               DateTime? @db.Date
+  ESTOQUE_MINIMO          Int?      @default(0)
+  ESTOQUE_ATUAL           Int?      @default(0)
+  ESTOQUE_ANTERIOR        Int?
+
+  @@index([ID_FAMILIA], map: "ID_FAMILIA")
+  @@index([ID_GRUPO], map: "ID_GRUPO")
+  @@index([ID_LOJA], map: "ID_LOJA")
+  @@index([ID_MARCA], map: "ID_MARCA")
+  @@index([ID_SUBGRUPO], map: "ID_SUBGRUPO")
+  @@index([ID_SYSTEM_CLIENTE], map: "ID_SYSTEM_CLIENTE")
+  @@index([ID_TBL_PRODUTO], map: "ID_TBL_PRODUTO")
+  @@index([DATA], map: "tbl_pedido_movimento_DATA_IDX")
+  @@index([ID_GENERATED], map: "tbl_pedido_movimento_ID_GENERATED_IDX")
+  @@index([ID_PROTOCOLO], map: "tbl_pedido_movimento_ID_PROTOCOLO_IDX")
+  @@index([ID_TBL_PEDIDO], map: "tbl_pedido_movimento_ID_TBL_PEDIDO_IDX")
+  @@index([ID_TIPO], map: "tbl_pedido_movimento_ID_TIPO_IDX")
+  @@index([QT], map: "tbl_pedido_movimento_QT_IDX")
+}
+
+model tbl_pedido_tipo_frete {
+  ID_TIPO_FRETE     Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE Int?      @default(0)
+  ID_LOJA           Int?      @default(1)
+  ID_USUARIO        Int?      @default(1)
+  ID_DEPARTAMENTO   Int?      @default(1)
+  TIPO_FRETE        String?   @db.VarChar(50)
+  VALOR_PADRAO      Decimal?  @default(0.00) @db.Decimal(18, 2)
+  TAXA_PADRAO       Decimal?  @default(0.00) @db.Decimal(18, 2)
+  INATIVO           Int?      @default(0) @db.SmallInt
+  DATADOCADASTRO    DateTime? @db.DateTime(0)
+  DT_EXPORTE        DateTime? @db.Date
+  DT_UPDATE         DateTime? @db.Date
+}
+
+model tbl_pessoa {
+  ID_TBL_PESSOA          Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE      Int?      @default(0)
+  ID_LOJA                Int?      @default(1)
+  ID_DEPARTAMENTO        Int?      @default(1)
+  ID_USUARIO             Int?
+  ID_CONSUMER            Int?      @default(0)
+  ID_PARENTS             Int?
+  ID_PESSOA_CATEGORIA    Int?      @default(1)
+  ID_PESSOA_TIPO         Int?      @default(1)
+  ID_TBL_PRODUTO_TAXA    Int?      @default(0)
+  TIPO_DE_PESSOA         String?   @default("PESSOA FÍSICA") @db.VarChar(100)
+  FISIJURI               String?   @db.VarChar(10)
+  NOME                   String?   @db.VarChar(300)
+  ID_IMAGEM              Int?
+  PATH_IMAGEM            String?   @db.VarChar(300)
+  FONE1                  String?   @db.VarChar(100)
+  FONE2                  String?   @db.VarChar(100)
+  FONE3                  String?   @db.VarChar(100)
+  FONE4                  String?   @db.VarChar(100)
+  FONE5                  String?   @db.VarChar(100)
+  FAX                    String?   @db.VarChar(100)
+  EMAIL                  String?   @db.VarChar(100)
+  EMAIL2                 String?   @db.VarChar(100)
+  EMAIL3                 String?   @db.VarChar(100)
+  EMAIL4                 String?   @db.VarChar(100)
+  EMAIL5                 String?   @db.VarChar(100)
+  INDEFINIDO             String?   @db.VarChar(10)
+  INATIVO                Int?      @default(0) @db.SmallInt
+  CLIENTE                Int?      @default(0) @db.SmallInt
+  FORNECEDOR             Int?      @default(0) @db.SmallInt
+  PROFISSIONAL           Int?      @default(0) @db.SmallInt
+  FUNCIONARIO            Int?      @default(0) @db.SmallInt
+  VENDEDOR               Int?      @default(0) @db.SmallInt
+  USUARIO                Int?      @default(0) @db.SmallInt
+  PESSOA                 Int?      @default(1) @db.SmallInt
+  AFILIADO               Int?      @default(0) @db.SmallInt
+  WHATAPP1               String?   @db.VarChar(200)
+  WHATAPP2               String?   @db.VarChar(200)
+  WHATAPP3               String?   @db.VarChar(200)
+  WHATAPP4               String?   @db.VarChar(200)
+  WHATAPP5               String?   @db.VarChar(200)
+  CONTATO1               String?   @db.VarChar(200)
+  CONTATO2               String?   @db.VarChar(200)
+  CONTATO3               String?   @db.VarChar(200)
+  CONTATO4               String?   @db.VarChar(200)
+  CONTATO5               String?   @db.VarChar(200)
+  SETOR1                 String?   @db.VarChar(100)
+  SETOR2                 String?   @db.VarChar(100)
+  SETOR3                 String?   @db.VarChar(100)
+  SETOR4                 String?   @db.VarChar(100)
+  SETOR5                 String?   @db.VarChar(100)
+  RAMAL1                 String?   @db.VarChar(100)
+  RAMAL2                 String?   @db.VarChar(100)
+  RAMAL3                 String?   @db.VarChar(100)
+  RAMAL4                 String?   @db.VarChar(100)
+  RAMAL5                 String?   @db.VarChar(100)
+  WEBSITE                String?   @db.VarChar(100)
+  SKYPE                  String?   @db.VarChar(100)
+  ANOTACOES              String?   @db.LongText
+  FACEBOOK               String?   @db.VarChar(100)
+  TWITTER                String?   @db.VarChar(100)
+  LINKEDIN               String?   @db.VarChar(100)
+  DATADOCADASTRO         DateTime? @db.DateTime(0)
+  LOGIN                  String?   @db.VarChar(100)
+  SENHA                  String?   @db.VarChar(100)
+  ACESSOWEBADMIN         Int?      @default(0) @db.SmallInt
+  ACESSOWEB              Int?      @default(0) @db.SmallInt
+  ACESSODESK             Int?      @default(0) @db.SmallInt
+  NIVEL                  Int?      @default(0) @db.SmallInt
+  PRINT_INDEX            Int?      @default(0)
+  PRN_TERMICA            String?   @default("0") @db.VarChar(300)
+  PRN_CODBARRAS          String?   @db.VarChar(50)
+  PRN_PADRAO             String?   @db.VarChar(50)
+  PRN_PDV                String?   @db.VarChar(80)
+  PRN_FISCAL             String?   @db.VarChar(80)
+  PRN_CODBARRAS1         String?   @db.VarChar(80)
+  PRN_CODBARRAS2         String?   @db.VarChar(80)
+  EMAIL_DE_LOGIN         String?   @db.VarChar(300)
+  ID_TIPO_CLIENTE        Int?
+  ID_STATUS_CLIENTE      Int?      @default(49)
+  ID_STATUS_REVENDA      Int?      @default(43)
+  ID_VENDEDOR            Int?      @default(9020)
+  ID_CARRINHO            Int?      @default(0)
+  APROVADO               String?   @db.Char(1)
+  EMAIL_MKT              Int?      @default(0) @db.SmallInt
+  RESTRICAO              Int?      @default(0) @db.SmallInt
+  DT_ULTIMA_COMPRA       DateTime? @db.DateTime(0)
+  CEP                    String?   @db.VarChar(100)
+  ENDERECO               String?   @db.VarChar(300)
+  ENDERECO_NUMERO        String?   @db.VarChar(100)
+  COMPLEMENTO            String?   @db.VarChar(200)
+  BAIRRO                 String?   @db.VarChar(200)
+  CIDADE                 String?   @db.VarChar(100)
+  UF                     String?   @db.VarChar(100)
+  REGIAO_PAIS            String?   @db.VarChar(100)
+  PAIS                   String?   @db.VarChar(100)
+  COD_MUNICIPIO          Int?      @default(0)
+  COD_UF                 Int?      @default(0)
+  PRIMEIRO_NOME          String?   @db.VarChar(50)
+  NOME_DO_MEIO           String?   @db.VarChar(50)
+  SOBRENOME              String?   @db.VarChar(50)
+  GENERO                 String?   @db.Char(1)
+  TRATAMENTO             String?   @db.VarChar(100)
+  CPF                    String?   @db.VarChar(100)
+  RG                     String?   @db.VarChar(100)
+  TRABALHANAEMPRESA      String?   @db.VarChar(300)
+  CARGO                  String?   @db.VarChar(300)
+  FORMACAOACADEMICA      String?   @db.VarChar(300)
+  FORMACAOATUAL          String?   @db.VarChar(300)
+  ESPECIALIZACAO         String?   @db.VarChar(300)
+  INSTITUICAODEENSINO    String?   @db.VarChar(300)
+  CONJUGUE               String?   @db.VarChar(300)
+  DATADONASCIMENTO       DateTime? @db.Date
+  NOMEDOPAI              String?   @db.VarChar(100)
+  NOMEDAMAE              String?   @db.VarChar(100)
+  CPFDOPAI               String?   @db.VarChar(300)
+  CPFDAMAE               String?   @db.VarChar(300)
+  ESCOLANOME             String?   @db.VarChar(100)
+  DADOSDAFORMACAO        String?   @db.LongText
+  ANOTACOES_PF           String?   @db.LongText
+  ANOTACOES_PJ           String?   @db.LongText
+  ANOTACOES_ENDERECO     String?   @db.LongText
+  ANOTACOES_CLIENTE      String?   @db.LongText
+  ANOTACOES_VENDEDOR     String?   @db.LongText
+  RAZAO_SOCIAL           String?   @db.VarChar(300)
+  NOME_FANTASIA          String?   @db.VarChar(300)
+  CNPJ                   String?   @db.VarChar(300)
+  DATA_CNPJ              DateTime? @db.Date
+  INSC_ESTADUAL          String?   @db.VarChar(300)
+  INSC_MUNICIPAL         String?   @db.VarChar(300)
+  NOME_RESPONSAVEL       String?   @db.VarChar(100)
+  CARGO_RESPONSAVEL      String?   @db.VarChar(100)
+  ATIVIDADE_PRINCIPAL    String?   @db.VarChar(300)
+  ATIVIDADES_SECUNDARIA1 String?   @db.VarChar(100)
+  ATIVIDADES_SECUNDARIA2 String?   @db.VarChar(100)
+  ATIVIDADES_SECUNDARIA3 String?   @db.VarChar(100)
+  ATIVIDADES_SECUNDARIA4 String?   @db.VarChar(100)
+  ATIVIDADES_SECUNDARIA5 String?   @db.VarChar(100)
+  NATUREZA_JURIDICA      String?   @db.VarChar(100)
+  OBJETIVO_MISSAO        String?   @db.VarChar(100)
+  MISSAO_VISAO           String?   @db.LongText
+  VALOR_PERC_COMISSAO    Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  DT_EXPORTE             DateTime? @db.Date
+  DT_UPDATE              DateTime? @db.Date
+
+  @@index([CNPJ], map: "CNPJ")
+  @@index([CPF], map: "CPF")
+  @@index([EMAIL_DE_LOGIN], map: "EMAIL_DE_LOGIN")
+  @@index([FISIJURI], map: "FISIJURI")
+  @@index([ID_LOJA], map: "ID_LOJA")
+  @@index([ID_PESSOA_CATEGORIA], map: "ID_PESSOA_CATEGORIA")
+  @@index([ID_PESSOA_TIPO], map: "ID_PESSOA_TIPO")
+  @@index([ID_SYSTEM_CLIENTE], map: "ID_SYSTEM_CLIENTE")
+  @@index([NOME], map: "NOME")
+  @@index([TIPO_DE_PESSOA], map: "TIPO_DE_PESSOA")
+  @@index([DT_ULTIMA_COMPRA], map: "tbl_pessoa_DT_ULTIMA_COMPRA_IDX")
+}
+
+model tbl_pessoa_categoria {
+  ID_TBL_PESSOA_CATEGORIA Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE       Int?      @default(0)
+  ID_LOJA                 Int?      @default(1)
+  ID_DEPARTAMENTO         Int?      @default(1)
+  ID_USUARIO              Int?
+  CATEGORIA               String?   @db.VarChar(200)
+  INATIVO                 Int?      @default(0)
+  DESCRICAO_CATEGORIA     String    @db.VarChar(50)
+  DATADOCADASTRO          DateTime? @db.DateTime(0)
+  DT_EXPORTE              DateTime? @db.Date
+  DT_UPDATE               DateTime? @db.Date
+}
+
+model tbl_produto {
+  ID_TBL_PRODUTO            Int       @id @default(autoincrement())
+  ID_GENERATED              BigInt?   @default(0)
+  ID_SYSTEM_CLIENTE         Int?      @default(0)
+  ID_FABRICANTE             Int?      @default(1)
+  ID_USUARIO                Int?      @default(1)
+  ID_DEPARTAMENTO           Int?      @default(1)
+  ID_POST                   Int?      @default(0)
+  ID_MARCA                  Int?      @default(1)
+  ID_FORNECEDOR             Int?      @default(1)
+  ID_FAMILIA                Int?
+  ID_GRUPO                  Int?
+  ID_SUBGRUPO               Int?
+  ID_STATUS_COMPRA          Int?      @default(120)
+  ID_PARENT                 Int?      @default(0)
+  ID_IMAGEM                 Int?      @default(0)
+  ID_LOJA                   Int?      @default(1)
+  ID_TIPO                   Int?      @default(1)
+  ID_LOCALIZACAO            Int?      @default(1)
+  ID_MODULO                 Int?      @default(2)
+  NCM                       Int?      @default(0)
+  QT_PARA_COMPRA            Int?      @default(0)
+  TEMPODEGARANTIA_MES       Int?      @default(0)
+  PESO_GR                   Int?      @default(1000)
+  COMPRIMENTO_MM            Int?      @default(0)
+  LARGURA_MM                Int?      @default(0)
+  ALTURA_MM                 Int?      @default(0)
+  DIAMETRO_MM               Int?      @default(0)
+  ID_FORMATO_ENVIO          Int?      @default(1)
+  SKU                       String?   @db.VarChar(100)
+  TEMPO_ENTREGA_DIAS        Int?
+  NAO_USAR_DOLAR            Int?
+  PPB                       Int?
+  QT_VENDAS_ANO             Int?      @default(0)
+  QT_VENDAS_MES             Int?      @default(0)
+  QT_VENDAS_ALL             Int?      @default(0)
+  PRODUTO                   String?   @db.VarChar(200)
+  PRODUTO_BKP               String?   @db.VarChar(300)
+  DESCRICAO_TAB             String?   @db.VarChar(200)
+  FABRICANTE                String?   @db.VarChar(100)
+  PATH_IMAGEM               String?   @db.VarChar(300)
+  PATH_IMAGEM_VENDA         String?   @db.VarChar(300)
+  PATH_PAGE                 String?   @db.VarChar(300)
+  PATH_WEBSITE_ATAC         String?   @db.VarChar(300)
+  PATH_WEBSITE_VARE         String?   @db.VarChar(300)
+  LINK_TITLE                String?   @db.VarChar(300)
+  META_DESCRIPTION          String?   @db.VarChar(300)
+  META_TITLE                String?   @db.VarChar(300)
+  REF                       String?   @db.VarChar(100)
+  ETIQUETA                  String?   @db.VarChar(100)
+  SEGMENTO                  String?   @db.VarChar(100)
+  CFOP                      String?   @default("0") @db.VarChar(100)
+  CST                       String?   @default("0") @db.VarChar(100)
+  MODELO                    String?   @db.VarChar(100)
+  NBM                       String?   @db.VarChar(100)
+  EAN                       String?   @db.VarChar(100)
+  SALEUNIT                  String?   @default("PC") @db.VarChar(50)
+  NOME_ANTERIOR             String?   @db.VarChar(300)
+  QT_SALEUNIT               Int?      @default(1)
+  FLAG_SERVICO              Int?      @default(0) @db.SmallInt
+  TX_TOTALBASE_ATACADO      Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_TOTALBASE_VAREJO       Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TEMP                      Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_LUCRO_VAREJO           Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_LUCRO_ATACADO          Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_DESCONTO_VAREJO        Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_DESCONTO_ATACADO       Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_COMISSAO_VAREJO        Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_COMISSAO_ATACADO       Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  IPI                       Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  ICMS                      Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ST                     Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_ST                     Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_CUSTO                  Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_LUCRO                  Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_FRETE                  Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TAXA_PERCA                Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_FRETE_REAL             Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_FRETE_DOLAR            Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ENT_REAL               Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ENT_DOLAR              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ENT_DOLAR_BKP          Decimal?  @db.Decimal(18, 6)
+  VL_ENT_REAL_BKP           Decimal?  @db.Decimal(18, 6)
+  VL_FRETE_DOLAR_BKP        Decimal?  @db.Decimal(18, 6)
+  VL_FRETE_REAL_BKP         Decimal?  @db.Decimal(18, 6)
+  FLAG_USAR_SN              Int?      @default(0) @db.SmallInt
+  IMPORTADO                 Int?      @default(0) @db.SmallInt
+  CONSIGNADO                Int?      @default(0) @db.SmallInt
+  INATIVO                   Int?      @default(2) @db.SmallInt
+  PROMOCAO                  Int?      @default(0) @db.SmallInt
+  LANCAMENTO                Int?      @default(0) @db.SmallInt
+  DESCONTINUADO             Int?      @default(0) @db.SmallInt
+  CONTROLAR_ESTOQUE         Int?      @default(1) @db.SmallInt
+  DESTAQUE                  Int?      @default(0) @db.SmallInt
+  REPETIRETIQUETA           Int?      @default(0) @db.SmallInt
+  FLAG_EXPORTADO            Int?      @default(0) @db.SmallInt
+  FLAG_EXP_WEBSITE          Int?      @default(0) @db.SmallInt
+  PRN_QTLACRE               Int?      @default(1)
+  DATADOCADASTRO            DateTime? @db.DateTime(0)
+  DATA_ULT_ENTRADA          DateTime? @db.DateTime(0)
+  DATA_ULT_VENDA            DateTime? @db.DateTime(0)
+  DATA_ULT_UPDATE           DateTime? @db.DateTime(0)
+  DT_ALT_ESTOQUE            DateTime? @db.DateTime(0)
+  DT_MONITOR                DateTime? @db.DateTime(0)
+  DESCRICAO_VENDA           String?   @db.LongText
+  DESCRICAO_COMPATIBILIDADE String?   @db.LongText
+  ANOTACOES                 String?   @db.LongText
+  INDEFINIDO                String?   @db.VarChar(10)
+  QT_ETIQUETAS              Int?
+  EXCLUIDO                  Int?      @default(0) @db.SmallInt
+  FLAG_LACRE_DESTRUTIVO     Int?      @default(1) @db.SmallInt
+  FLAG_CONTROLE_FISICO      Int?      @default(1) @db.SmallInt
+  FLAG_LOOP                 Int?      @default(0)
+  FLAG_REVENDA              Int?      @default(0)
+  SOLICITACAO_VENDAS1       Int?
+  SOLICITACAO_VENDAS2       Int?
+  SOLICITACAO_VENDAS3       Int?
+  SOLICITACAO_VENDAS4       Int?
+  FLAG_IMG_HAYAMAX          Int?      @default(0) @db.SmallInt
+  DT_EXPORTADO              DateTime? @db.DateTime(0)
+  FLAG_WEBSITE_OFF          Int?      @default(0) @db.SmallInt
+  STQ_FILEIRA               Int?      @default(0)
+  STQ_GONDULA               Int?      @default(0)
+  LOCAL                     String?   @db.VarChar(100)
+  STQ_PRATELEIRA            Int?      @default(0)
+  CST_SAIDA                 String?   @default("0") @db.VarChar(10)
+  CEST                      Int?      @default(0)
+  DT_UPD_WEBSITE            DateTime? @db.DateTime(0)
+  FLAG_PERECIVEL            Int?      @default(0) @db.SmallInt
+  QT_VENDAS_MEDIA3MESES     Int?      @default(0)
+  QT_VENDAS_3MESES          Int?      @default(0)
+  QT_VENDAS_MEDIA12MESES    Int?      @default(0)
+  NFE_CEST                  String?   @db.VarChar(10)
+  CFOP_SAIDA                String?   @db.VarChar(10)
+  NFE_CFOP_SAIDA            String?   @db.VarChar(4)
+  NFE_CST_CSOSN             String?   @db.VarChar(4)
+  PATH_WEBSITE_TOPRIBEIRAO  String?   @db.VarChar(300)
+  ID_EMISSAO                Int?      @default(0)
+  TEMPODEGARANTIA_DIA       Int?      @default(0)
+  LOCAL_ESTOQUE             String?   @db.VarChar(50)
+  TXBASE_ATACADO            Int?      @default(15)
+  TXBASE_CORPORATIVO        Int?      @default(20)
+  TXBASE_VAREJO             Int?      @default(25)
+  FLAG_REPOSICAO            Int?      @default(0) @db.SmallInt
+  DT_REPOSICAO              DateTime? @db.DateTime(0)
+  DT_EXPORTE                DateTime? @db.Date
+  DT_UPDATE                 DateTime? @db.Date
+
+  @@index([DATADOCADASTRO], map: "DATADOCADASTRO")
+  @@index([DT_REPOSICAO], map: "DT_REPOSICAO")
+  @@index([FLAG_REPOSICAO], map: "FLAG_REPOSICAO")
+  @@index([FLAG_SERVICO], map: "FLAG_SERVICO")
+  @@index([ID_FAMILIA], map: "ID_FAMILIA")
+  @@index([ID_FORNECEDOR], map: "ID_FORNECEDOR")
+  @@index([ID_GRUPO], map: "ID_GRUPO")
+  @@index([ID_LOJA], map: "ID_LOJA")
+  @@index([ID_POST], map: "ID_POST")
+  @@index([ID_SUBGRUPO], map: "ID_SUBGRUPO")
+  @@index([ID_SYSTEM_CLIENTE], map: "ID_SYSTEM_CLIENTE")
+  @@index([INATIVO], map: "INATIVO")
+  @@index([ID_STATUS_COMPRA], map: "ind_id_status_compra")
+  @@index([EAN], map: "tbl_produto_EAN_IDX")
+  @@index([ID_GENERATED], map: "tbl_produto_ID_GENERATED_IDX")
+  @@index([PRODUTO], map: "tbl_produto_PRODUTO_IDX")
+}
+
+model tbl_produto_caracteristica {
+  ID_CARACTERISTICA Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE Int?      @default(0)
+  ID_LOJA           Int?      @default(1)
+  ID_USUARIO        Int?      @default(1)
+  ID_DEPARTAMENTO   Int?      @default(1)
+  ID_PRODUTO        Int?
+  CARACTERISTICA    String?   @db.VarChar(200)
+  VALOR             String?   @db.VarChar(300)
+  INATIVO           Int?      @db.SmallInt
+  FLAG_CARAC_IMP    Int?      @default(0) @db.SmallInt
+  DT_CADASTRO       DateTime? @db.DateTime(0)
+  ANOTACOES         String?   @db.LongText
+  DT_EXPORTE        DateTime? @db.Date
+  DT_UPDATE         DateTime? @db.Date
+}
+
+model tbl_produto_config {
+  ID_CONFIG           Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE   Int?      @default(0)
+  ID_LOJA             Int?      @default(1)
+  ID_USUARIO          Int?      @default(1)
+  ID_DEPARTAMENTO     Int?      @default(1)
+  ID_FAMILIA          Int?      @default(0)
+  ID_GRUPO            Int?      @default(0)
+  ID_SUBGRUPO         Int?      @default(0)
+  ID_FORNECEDOR       Int?      @default(1)
+  ID_TIPO             Int?      @default(5)
+  ID_MARCA            Int?      @default(4)
+  TX_COMISSAO_ATACADO Decimal?  @default(0.0000) @db.Decimal(18, 4)
+  TX_COMISSAO_VAREJO  Decimal?  @default(0.0000) @db.Decimal(18, 4)
+  TX_DESCONTO_ATACADO Decimal?  @default(0.0000) @db.Decimal(18, 4)
+  TX_DESCONTO_VAREJO  Decimal?  @default(0.0000) @db.Decimal(18, 4)
+  TX_LUCRO_VAREJO     Decimal?  @default(0.0000) @db.Decimal(18, 4)
+  TX_LUCRO_ATACADO    Decimal?  @default(0.0000) @db.Decimal(18, 4)
+  CAMBIO              Decimal?  @default(0.0000) @db.Decimal(18, 4)
+  NBM                 String?   @default("0") @db.VarChar(10)
+  EAN                 String?   @default("0") @db.VarChar(10)
+  PPB                 Int?      @default(0)
+  VL_ST               Decimal?  @default(0.0000) @db.Decimal(18, 4)
+  ICMS                Decimal?  @default(0.0000) @db.Decimal(18, 4)
+  IPI                 Decimal?  @default(0.0000) @db.Decimal(18, 4)
+  TEMP                Decimal?  @default(0.0000) @db.Decimal(18, 4)
+  IVA                 Decimal?  @default(0.0000) @db.Decimal(18, 4)
+  PIS                 Decimal?  @default(0.0000) @db.Decimal(18, 4)
+  COFINS              Decimal?  @default(0.0000) @db.Decimal(18, 4)
+  NBM2                String?   @default("0") @db.VarChar(100)
+  VL_VENDA_VAREJO     Decimal?  @default(0.0000) @db.Decimal(18, 4)
+  VL_VENDA_ATACADO    Decimal?  @default(0.0000) @db.Decimal(18, 4)
+  NCM                 Int?      @default(0)
+  NFE_CEST            String?   @db.VarChar(100)
+  CFOP                String?   @db.VarChar(100)
+  NFE_CFOP_SAIDA      String?   @db.VarChar(100)
+  CST                 String?   @db.VarChar(100)
+  NFE_CST_CSOSN       String?   @db.VarChar(100)
+  CFOP_SAIDA          String?   @db.VarChar(100)
+  CEST                Int?      @default(0)
+  CLAS_FISCAL         String?   @default("0") @db.VarChar(100)
+  INATIVO             Int?
+  ANOTACOES           String?   @db.LongText
+  DT_CADASTRO         DateTime? @db.DateTime(0)
+  DT_EXPORTE          DateTime? @db.Date
+  DT_UPDATE           DateTime? @db.Date
+}
+
+model tbl_produto_estoque {
+  ID_PRODUTO         Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE  Int?      @default(0)
+  ID_LOJA            Int?      @default(1)
+  ID_DEPARTAMENTO    Int?      @default(1)
+  ID_USUARIO         Int?      @default(1)
+  ID_ULT_ENTRADA     Int?      @default(0)
+  ESTOQUE_LOJA1      Int?      @default(0)
+  ESTOQUE_LOJA2      Int?      @default(0)
+  ESTOQUE_LOJA3      Int?      @default(0)
+  ESTOQUE_LOJA4      Int?      @default(0)
+  ESTOQUE_LOJA5      Int?      @default(0)
+  ESTOQUE_LOJA6      Int?      @default(0)
+  ESTOQUE_LOJA7      Int?      @default(0)
+  ESTOQUE_LOJA8      Int?      @default(0)
+  ESTOQUE_LOJA9      Int?      @default(0)
+  ESTOQUE_LOJA10     Int?      @default(0)
+  ESTOQUE_LOJA11     Int?      @default(0)
+  ESTOQUE_LOJA12     Int?      @default(0)
+  ESTOQUE_LOJA13     Int?      @default(0)
+  ESTOQUE_LOJA14     Int?      @default(0)
+  ESTOQUE_LOJA15     Int?      @default(0)
+  ESTOQUE_LOJA16     Int?      @default(0)
+  ESTOQUE_LOJA17     Int?      @default(0)
+  ESTOQUE_LOJA18     Int?      @default(0)
+  ESTOQUE_LOJA19     Int?      @default(0)
+  ESTOQUE_LOJA20     Int?      @default(0)
+  ESTOQUE_LOJA21     Int?      @default(0)
+  ESTOQUE_LOJA22     Int?      @default(0)
+  ESTOQUE_LOJA23     Int?      @default(0)
+  ESTOQUE_LOJA24     Int?      @default(0)
+  ESTOQUE_LOJA25     Int?      @default(0)
+  ESTOQUE_LOJA26     Int?      @default(0)
+  ESTOQUE_LOJA27     Int?      @default(0)
+  ESTOQUE_LOJA28     Int?      @default(0)
+  ESTOQUE_LOJA29     Int?      @default(0)
+  ESTOQUE_LOJA30     Int?      @default(0)
+  DEPOSITO1          Int?      @default(0)
+  MINIMO_LOJA1       Int?      @default(0)
+  MINIMO_LOJA2       Int?      @default(0)
+  MINIMO_LOJA3       Int?      @default(0)
+  MINIMO_LOJA4       Int?      @default(0)
+  MINIMO_LOJA5       Int?      @default(0)
+  MINIMO_LOJA6       Int?      @default(0)
+  MINIMO_LOJA7       Int?      @default(0)
+  MINIMO_LOJA8       Int?      @default(0)
+  MINIMO_LOJA9       Int?      @default(0)
+  MINIMO_LOJA10      Int?      @default(0)
+  MINIMO_LOJA11      Int?      @default(0)
+  MINIMO_LOJA12      Int?      @default(0)
+  MINIMO_LOJA13      Int?      @default(0)
+  MINIMO_LOJA14      Int?      @default(0)
+  MINIMO_LOJA15      Int?      @default(0)
+  MINIMO_LOJA16      Int?      @default(0)
+  MINIMO_LOJA17      Int?      @default(0)
+  MINIMO_LOJA18      Int?      @default(0)
+  MINIMO_LOJA19      Int?      @default(0)
+  MINIMO_LOJA20      Int?      @default(0)
+  MINIMO_LOJA21      Int?      @default(0)
+  MINIMO_LOJA22      Int?      @default(0)
+  MINIMO_LOJA23      Int?      @default(0)
+  MINIMO_LOJA24      Int?      @default(0)
+  MINIMO_LOJA25      Int?      @default(0)
+  MINIMO_LOJA26      Int?      @default(0)
+  MINIMO_LOJA27      Int?      @default(0)
+  MINIMO_LOJA28      Int?      @default(0)
+  MINIMO_LOJA29      Int?      @default(0)
+  MINIMO_LOJA30      Int?      @default(0)
+  MINIMO_DEPOSITO1   Int?      @default(0)
+  REPOSICAO4         Int?
+  DT_ULT_ENTRADA     DateTime? @db.DateTime(0)
+  DATADOCADASTRO     DateTime? @db.DateTime(0)
+  DT_EXPORTE         DateTime? @db.Date
+  DT_UPDATE          DateTime? @db.Date
+  ESTOQUE_LOJA6_BKP  Int?      @default(0)
+  ESTOQUE_LOJA6_MOV  Int?      @default(0)
+  ESTOQUE_LOJA6_MOV2 Int?      @default(0)
+
+  @@index([ESTOQUE_LOJA1], map: "IND_ESTOQUE_LOJA1")
+  @@index([ESTOQUE_LOJA6], map: "tbl_produto_estoque_ESTOQUE_LOJA6_IDX")
+}
+
+model tbl_produto_fisico {
+  ID_TBL_PRODUTO_FISICO Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE     Int?      @default(0)
+  ID_PRODUTO            Int?
+  ID_DEPARTAMENTO       Int?      @default(1)
+  ID_ENTRADA            Int?
+  ID_ENTRADA_MOVIMENTO  Int?
+  ID_PEDIDO             Int?
+  ID_PEDIDO_MOVIMENTO   Int?      @default(1)
+  ID_CLIENTE            Int?
+  ID_USUARIO            Int?      @default(0)
+  ID_USER_EXPEDICAO     Int?
+  ID_LOCALIZACAO        Int?
+  ID_LOJA               Int?      @default(1)
+  ID_EMPRESA            Int?
+  ID_STATUS             Int?      @default(0)
+  DATA                  DateTime? @db.Date
+  ESTOQUE               Int?      @default(1) @db.SmallInt
+  VL_CUSTO              Decimal?  @db.Decimal(18, 2)
+  HISTORICO             String?   @db.LongText
+  PRODUTO               String?   @db.VarChar(200)
+  COD_BARRAS            String?   @db.VarChar(100)
+  N_SERIE               String?   @db.VarChar(100)
+  NF_ENTRADA            String?   @db.VarChar(15)
+  NF_SAIDA              String?   @db.VarChar(15)
+  GARANTIA              DateTime? @db.Date
+  VL_VENDA              Decimal?  @db.Decimal(18, 2)
+  DT_RETIRADA           DateTime? @db.Date
+  DT_CADASTRO           DateTime? @db.DateTime(0)
+  DT_PEDIDO             DateTime? @db.DateTime(0)
+  HORA                  DateTime? @db.Time(0)
+  ID_HISTORICO          Int?
+  ID_STATUSRMA          Int?      @default(0) @db.SmallInt
+  TAMANHO               String?   @db.VarChar(10)
+  MOSTRUARIO            String?   @db.VarChar(100)
+  FLAG_ABERTO_CLIENTE   Int?      @default(0) @db.SmallInt
+  FLAG_DEFEITO          Int?      @default(0) @db.SmallInt
+  FLAG_FORNECEDOR       Int?      @default(0) @db.SmallInt
+  FLAG_OK               Int?      @default(0) @db.SmallInt
+  ID_RMA                Int?      @default(0)
+  AUDITORIA             String?   @db.VarChar(100)
+  MARCA                 String?   @db.VarChar(50)
+  DESCRICAO             String?   @db.VarChar(60)
+  DT_EXPORTE            DateTime? @db.Date
+  DT_UPDATE             DateTime? @db.Date
+
+  @@index([ESTOQUE], map: "ESTOQUE")
+  @@index([ID_ENTRADA], map: "ID_ENTRADA")
+  @@index([ID_PEDIDO_MOVIMENTO], map: "ID_ENTRADA_MOVIMENTO")
+  @@index([ID_PEDIDO], map: "ID_PEDIDO")
+  @@index([ID_PEDIDO_MOVIMENTO], map: "ID_PEDIDO_MOVIMENTO")
+  @@index([ID_SYSTEM_CLIENTE], map: "ID_SYSTEM_CLIENTE")
+  @@index([ID_PRODUTO], map: "ID_TBL_PRODUTO")
+}
+
+model tbl_produto_fornecedor {
+  ID_TBL_PRODUTO_FORNECEDOR Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE         Int?      @default(0)
+  ID_LOJA                   Int?      @default(1)
+  ID_DEPARTAMENTO           Int?      @default(1)
+  ID_USUARIO                Int?      @default(1)
+  ID_TBL_FORNECEDOR         Int?      @default(0)
+  ID_TBL_PRODUTO            Int?      @default(0)
+  ID_PESSOA                 Int?
+  PRODUTO                   String?   @db.VarChar(300)
+  CODIGODOPRODUTO           String?   @db.VarChar(200)
+  PATH_PAGE_WEB             String?   @db.VarChar(500)
+  PRAZO_ENTREGA_P_ESTOQUE   Int?      @default(0)
+  PRAZO_ENTREGA_NO_CLIENTE  Int?      @default(0)
+  MARCA                     String?   @db.VarChar(200)
+  PATH_IMAGEM_WEB           String?   @db.VarChar(500)
+  GARANTIASMES              Int?      @default(0)
+  GARANTIADIA               Int?      @default(0)
+  CST                       String?   @default("0") @db.VarChar(100)
+  CFOP                      String?   @default("0") @db.VarChar(100)
+  NCM                       String?   @default("0") @db.VarChar(100)
+  IPI                       Decimal?  @default(0.00) @db.Decimal(18, 2)
+  ICMS                      Decimal?  @default(0.00) @db.Decimal(18, 2)
+  INATIVO                   Int?      @default(0)
+  DT_ATUALIZACAO            DateTime? @db.DateTime(0)
+  DT_CADASTRO               DateTime? @db.DateTime(0)
+  ANOTACOES                 String?   @db.LongText
+  ID_ULT_ENTRADA            Int?
+  DT_ULT_ENTRADA            DateTime? @db.DateTime(0)
+  DT_EXPORTE                DateTime? @db.Date
+  DT_UPDATE                 DateTime? @db.Date
+}
+
+model tbl_produto_loja {
+  ID_PRODUTO_LOJA   Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE Int?      @default(0)
+  ID_LOJA           Int?
+  ID_DEPARTAMENTO   Int?
+  ID_USUARIO        Int?
+  ID_PRODUTO        Int?
+  DT_CADASTRO       DateTime? @db.DateTime(0)
+  DT_EXPORTE        DateTime? @db.Date
+  DT_UPDATE         DateTime? @db.Date
+}
+
+model tbl_produto_marca {
+  ID_MARCA          Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE Int?      @default(0)
+  ID_LOJA           Int?      @default(1)
+  ID_USUARIO        Int?      @default(1)
+  ID_DEPARTAMENTO   Int?      @default(1)
+  MARCA             String?   @db.VarChar(100)
+  PATH_IMAGEM       String?   @db.VarChar(300)
+  INATIVO           Int?      @default(0) @db.SmallInt
+  DATADOCADASTRO    DateTime? @db.DateTime(0)
+  ANOTACOES         String?   @db.LongText
+  ID_IMAGEM         Int?
+  NOME              String?   @db.VarChar(300)
+  DT_EXPORTE        DateTime? @db.Date
+  DT_UPDATE         DateTime? @db.Date
+}
+
+model tbl_produto_preco {
+  ID_PRODUTO               Int       @id
+  ID_PROPRECO              Int?
+  ID_SYSTEM_CLIENTE        Int?      @default(0)
+  ID_LOJA                  Int?      @default(1)
+  ID_USUARIO               Int?      @default(1)
+  ID_DEPARTAMENTO          Int?      @default(1)
+  OURO                     Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  PRATA                    Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  BRONZE                   Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO1              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO2              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO3              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO4              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO5              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO6              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO7              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO8              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO9              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO10             Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO11             Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO12             Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO13             Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO14             Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO15             Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO16             Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO17             Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO18             Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO29             Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO19             Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO20             Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO21             Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO22             Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO23             Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO24             Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO25             Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO26             Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO27             Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO28             Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO30             Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO1          Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO2          Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO3          Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO4          Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO5          Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO6          Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO7          Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO8          Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO9          Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO10         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO11         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO12         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO13         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO14         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO15         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO16         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO17         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO18         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO19         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO20         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO21         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO22         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO23         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO24         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO25         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO26         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO27         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO28         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO29         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO30         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO1               Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO2               Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO3               Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO4               Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO5               Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO6               Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO7               Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO8               Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO9               Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO10              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO11              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO13              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO14              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO15              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO16              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO17              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO18              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO19              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO20              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO21              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO22              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO23              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO24              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO25              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO26              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO27              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO28              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO29              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO30              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA1         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA2         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA3         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA4         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA5         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA6         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA7         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA8         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA9         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA10        Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA11        Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA12        Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA13        Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA14        Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA15        Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA16        Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA17        Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA18        Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA19        Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA20        Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA21        Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA22        Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA23        Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA24        Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA25        Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA26        Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA27        Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA28        Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA29        Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_PRODUTO_LOJA30        Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO12              Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  DECONTO1                 Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  DECONTO2                 Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  DECONTO3                 Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  QUANTIDADE1              Int?      @default(0)
+  QUANTIDADE2              Int?      @default(0)
+  QUANTIDADE3              Int?      @default(0)
+  TXBASEFRETE              Decimal?  @db.Decimal(18, 6)
+  TXLUCROBRUTO_ATACADO     Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TXLUCROBRUTO_CORPORATIVO Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TXLUCROBRUTO_VAREJO      Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO_ANTERIOR      Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_CORPORATIVO_ANTERIOR  Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_VAREJO_ANTERIOR       Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  DT_CADASTRO              DateTime? @db.DateTime(0)
+  TXT_DESC1                String?   @db.VarChar(300)
+  TXT_DESC2                String?   @db.VarChar(300)
+  TXT_DESC3                String?   @db.VarChar(300)
+  DT_EXPORTE               DateTime? @db.Date
+  DT_UPDATE                DateTime? @db.Date
+  VL_ATACADO1_bkp          Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO2_bkp          Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO3_bkp          Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO4_bkp          Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO5_bkp          Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO6_bkp          Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO7_bkp          Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO8_bkp          Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO9_bkp          Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO10_bkp         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO11_bkp         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO12_bkp         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO13_bkp         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO14_bkp         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  VL_ATACADO15_bkp         Decimal?  @default(0.000000) @db.Decimal(18, 6)
+
+  @@index([VL_ATACADO1], map: "tbl_produto_preco_VL_ATACADO1_IDX")
+  @@index([VL_VAREJO1], map: "tbl_produto_preco_VL_VAREJO1_IDX")
+}
+
+model tbl_produto_tipo {
+  ID_TIPO               Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE     Int?      @default(0)
+  ID_LOJA               Int?      @default(1)
+  ID_USUARIO            Int?      @default(1)
+  ID_DEPARTAMENTO       Int?      @default(1)
+  TIPO                  String?   @db.VarChar(100)
+  INATIVO               Int?      @default(0) @db.SmallInt
+  ANOTACOES             String?   @db.LongText
+  FLAG_CADASTRO_PRODUTO Int?      @default(0) @db.SmallInt
+  DT_CADASTRO           DateTime? @db.DateTime(0)
+  DT_EXPORTE            DateTime? @db.Date
+  DT_UPDATE             DateTime? @db.Date
+  TX_COMISSAO_VARE      Decimal?  @default(0.000000) @db.Decimal(18, 6)
+  TX_COMISSAO_ATAC      Decimal?  @default(0.000000) @db.Decimal(18, 6)
+}
+
+model tbl_protocolo {
+  ID_TBL_PROTOCOLO    Int       @id @default(autoincrement())
+  ID_GENERATED        BigInt?   @default(0)
+  ID_SYSTEM_CLIENTE   Int?      @default(0)
+  ID_LOJA             Int?      @default(1)
+  ID_DEPARTAMENTO     Int?      @default(1)
+  ID_TBL_PEDIDO       Int?
+  ID_CLIENTE          Int?
+  ID_USUARIO          Int?
+  ID_VENDEDOR         Int?
+  ID_TABELA_CADASTRO  Int?
+  ID_TABELA_PRODUTO   Int?
+  ID_USUARIOENTREGA   Int?
+  ID_STATUS_ENTREGA   Int?      @default(18)
+  ID_SETOR            Int?      @default(0)
+  TIPO                String?   @db.VarChar(20)
+  CLIENTE             String?   @db.VarChar(300)
+  STATUS              String?   @default("EM ABERTO") @db.VarChar(100)
+  CAIXA               String?   @db.VarChar(20)
+  ID_USUARIO_RETIRADA Int?      @default(0)
+  VL_COMISSAO         Decimal?  @db.Decimal(18, 2)
+  VL_TOTAL_PEDIDO     Decimal?  @db.Decimal(18, 2)
+  VL_DESCONTOS        Decimal?  @db.Decimal(18, 2)
+  VALOR               Decimal?  @db.Decimal(18, 2)
+  ENTREGA_OK          Int?      @default(0) @db.SmallInt
+  CONCLUIDO           Int?      @default(0) @db.SmallInt
+  DATA                DateTime? @db.Date
+  HORA                DateTime? @db.Time(0)
+  OBSERVACAO          String?   @db.LongText
+  ID_STATUS_PROTOCOLO Int?      @default(0)
+  DATA_RETIRADA       DateTime? @db.DateTime(0)
+  CHAVE_NFE           String?   @db.VarChar(100)
+  ID_STATUS_NFE       Int?
+  FLAG_EMISSOR        Int?      @db.SmallInt
+  DATAHORA_EMISSAO    DateTime? @db.DateTime(0)
+  VL_PENDENTE         Decimal?  @db.Decimal(18, 2)
+  ID_TIPO_CLIENTE     Int?
+  VL_NFE              Decimal?  @db.Decimal(18, 2)
+  DT_EXPORTE          DateTime? @db.Date
+  DT_UPDATE           DateTime? @db.Date
+  DT_CADASTRO         DateTime? @db.DateTime(0)
+
+  @@index([DATA], map: "tbl_protocolo_DATA_IDX")
+  @@index([ID_CLIENTE], map: "tbl_protocolo_ID_CLIENTE_IDX")
+  @@index([ID_GENERATED], map: "tbl_protocolo_ID_GENERATED_IDX")
+  @@index([ID_LOJA], map: "tbl_protocolo_ID_LOJA_IDX")
+  @@index([ID_STATUS_NFE], map: "tbl_protocolo_ID_STATUS_NFE_IDX")
+  @@index([ID_STATUS_PROTOCOLO], map: "tbl_protocolo_ID_STATUS_PROTOCOLO_IDX")
+  @@index([ID_SYSTEM_CLIENTE], map: "tbl_protocolo_ID_SYSTEM_CLIENTE_IDX")
+  @@index([ID_USUARIOENTREGA], map: "tbl_protocolo_ID_USUARIOENTREGA_IDX")
+  @@index([ID_USUARIO], map: "tbl_protocolo_ID_USUARIO_IDX")
+  @@index([ID_USUARIO_RETIRADA], map: "tbl_protocolo_ID_USUARIO_RETIRADA_IDX")
+  @@index([ID_VENDEDOR], map: "tbl_protocolo_ID_VENDEDOR_IDX")
+}
+
+model tbl_transportadora {
+  ID_TRANSPORTADORA      Int       @id @default(autoincrement())
+  ID_SYSTEM_CLIENTE      Int?      @default(0)
+  ID_LOJA                Int?      @default(1)
+  ID_USUARIO             Int?      @default(1)
+  ID_DEPARTAMENTO        Int?      @default(1)
+  ID_CATEGORIA           Int?      @default(1)
+  ID_TIPO                Int?      @default(1)
+  ID_RESPONSAVEL         Int?
+  ID_IMAGEM              Int?
+  NOME                   String?   @db.VarChar(300)
+  FISIJURI               String?   @db.VarChar(10)
+  FONE1                  String?   @db.VarChar(200)
+  FONE2                  String?   @db.VarChar(200)
+  WHATAPP1               String?   @db.VarChar(200)
+  WHATAPP2               String?   @db.VarChar(200)
+  CONTATO1               String?   @db.VarChar(200)
+  CONTATO2               String?   @db.VarChar(200)
+  SETOR1                 String?   @db.VarChar(200)
+  SETOR2                 String?   @db.VarChar(200)
+  EMAIL1                 String?   @db.VarChar(200)
+  EMAIL2                 String?   @db.VarChar(200)
+  RAZAO_SOCIAL           String?   @db.VarChar(300)
+  CNPJ                   String?   @db.VarChar(100)
+  INSC_ESTADUAL          String?   @db.VarChar(100)
+  INSC_MUNICIPAL         String?   @db.VarChar(100)
+  NOME_FANTASIA          String?   @db.VarChar(200)
+  DATA_CNPJ              DateTime? @db.Date
+  NOME_RESPONSAVEL       String?   @db.VarChar(200)
+  CARGO_RESPOSNAVEL      String?   @db.VarChar(200)
+  ATIVIDADE_PRINCIPAL    String?   @db.VarChar(200)
+  ATIVIDADES_SECUNDARIA1 String?   @db.VarChar(200)
+  ATIVIDADES_SECUNDARIA2 String?   @db.VarChar(200)
+  ATIVIDADES_SECUNDARIA3 String?   @db.VarChar(200)
+  ATIVIDADES_SECUNDARIA4 String?   @db.VarChar(200)
+  ATIVIDADES_SECUNDARIA5 String?   @db.VarChar(200)
+  NATUREZA_JURIDICA      String?   @db.VarChar(200)
+  OBJETIVO_MISSAO        String?   @db.VarChar(300)
+  MISSAO_VISAO           String?   @db.LongText
+  PRIMEIRO_NOME          String?   @db.VarChar(100)
+  CARGO                  String?   @db.VarChar(200)
+  CPF                    String?   @db.VarChar(100)
+  RG                     String?   @db.VarChar(100)
+  GENERO                 String?   @db.Char(100)
+  SOBRENOME              String?   @db.VarChar(100)
+  NOME_DO_MEIO           String?   @db.VarChar(100)
+  TRATAMENTO             String?   @db.VarChar(50)
+  TRABALHANAEMPRESA      String?   @db.VarChar(200)
+  FORMACAOACADEMICA      String?   @db.VarChar(200)
+  FORMACAOATUAL          String?   @db.VarChar(200)
+  ESPECIALIZACAO         String?   @db.VarChar(200)
+  INSTITUICAODEENSINO    String?   @db.VarChar(200)
+  CONJUGUE               String?   @db.VarChar(200)
+  DATADONASCIMENTO       DateTime? @db.Date
+  CEP                    String?   @db.VarChar(100)
+  ENDERECO               String?   @db.VarChar(300)
+  ENDERECO_NUMERO        String?   @db.VarChar(100)
+  COMPLEMENTO            String?   @db.VarChar(300)
+  BAIRRO                 String?   @db.VarChar(200)
+  CIDADE                 String?   @db.VarChar(200)
+  UF                     String?   @db.VarChar(100)
+  REGIAO_PAIS            String?   @db.VarChar(200)
+  PAIS                   String?   @db.VarChar(200)
+  COD_MUNICIPIO          Int?      @default(0)
+  COD_UF                 Int?      @default(0)
+  WEBSITE                String?   @db.VarChar(300)
+  SKYPE                  String?   @db.VarChar(200)
+  FACEBOOK               String?   @db.VarChar(200)
+  TWITTER                String?   @db.VarChar(200)
+  FRETADOR               Int?      @db.SmallInt
+  DT_ULTIMA_COMPRA       DateTime? @db.Date
+  DATADOCADASTRO         DateTime? @db.DateTime(0)
+  ANOTACOES              String?   @db.LongText
+  DT_EXPORTE             DateTime? @db.Date
+  DT_UPDATE              DateTime? @db.Date
 }
