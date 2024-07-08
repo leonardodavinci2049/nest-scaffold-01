@@ -1,0 +1,17 @@
+APP_ENVIRONMENT=development
+APP_PORT=3001
+APP_HOST_API=http://localhost
+APP_JWT_SECRET=GFNWURoYfgKp1g1xdQX7xzvStmTt4r8Mal
+
+MYSQL_HOST=localhost
+MYSQL_PORT=3306
+MYSQL_DATABASE=db_distribuidoras3
+MYSQL_ROOT=root
+MYSQL_ROOT_PASSWORD=4X9U@dVy4oY424
+MYSQL_USER=comsuporte
+MYSQL_PASSWORD=59&X!hFDGsLY
+
+
+# DATABASE_URL="file:./dev.db"
+DATABASE_URL="mysql://root:4X9U@dVy4oY424@localhost:3309/db_distribuidoras3"
+

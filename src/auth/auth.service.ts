@@ -79,8 +79,8 @@ export class AuthService {
   }
 
   async login(loginAuthDto: LoginAuthDto) {
-    // const password = await bcrypt.hash(loginAuthDto.SENHA, 10);
-    // console.log(loginAuthDto.EMAIL_DE_LOGIN, loginAuthDto.SENHA, password);
+    //const password = await bcrypt.hash(loginAuthDto.SENHA, 10);
+    console.log(loginAuthDto.EMAIL_DE_LOGIN, loginAuthDto.SENHA);
     const userLogin = await this.prisma.tbl_system_usuario.findFirst({
       where: {
         EMAIL_DE_LOGIN: loginAuthDto.EMAIL_DE_LOGIN,
@@ -94,6 +94,8 @@ export class AuthService {
     if (!(await bcrypt.compare(loginAuthDto.SENHA, userLogin.SENHA))) {
       throw new UnauthorizedException('E-mail e/ou senha incorretos.');
     }
+
+    // console.log(userLogin);
 
     return this.createToken(userLogin);
     //return this.createToken(user);

@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.main/app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { AppModule } from './app.main/app.module';
 import { envs } from './core/config';
 import { LogInterceptor } from 'src/core/interceptors/log.interceptor';
 
@@ -25,6 +26,28 @@ async function bootstrap() {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Accept',
   });
+
+  const config = new DocumentBuilder()
+    .setTitle('WebService ComSuporte')
+    .setDescription('WebService para Suporte ao Sistema WinERP')
+    .setVersion('1.0')
+    .addTag('WINERP')
+    .addServer(envs.APP_API_URL)
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'JWT-auth', // This name here is important for matching up with @ApiBearerAuth()in your controller!
+    )
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup(envs.APP_SWAGGER_URL, app, document);
+
   //disponibiliza log de forma global para se chamdo posterior
   await app.useGlobalInterceptors(new LogInterceptor());
   await app.listen(envs.APP_PORT);

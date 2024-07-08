@@ -22,7 +22,7 @@ export class UserModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(UserIdCheckMiddleware).forRoutes({
       path: 'v1/user/:id',
-      method: RequestMethod.ALL,
+      method: RequestMethod.DELETE,
     });
   }
 }

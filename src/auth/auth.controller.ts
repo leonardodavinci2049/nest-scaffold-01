@@ -13,7 +13,8 @@ import { ForgetAuthDto } from './dto/forget-auth.dto';
 import { ResetAuthDto } from './dto/reset-auth.dto';
 import { UserDecorator } from 'src/core/decorators/user.decorator';
 import { AuthGuard } from 'src/core/guards/auth.guard';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('Login')
 @Controller('auth/v1')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

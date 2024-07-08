@@ -1,13 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+
 import { v4 as UuidV4 } from 'uuid';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/core/prisma/prisma.service';
-
+//import mysql from 'mysql2/promise';
 import * as bcrypt from 'bcrypt';
+import { envs } from 'src/core/config';
+import { createConnection, Connection } from 'mysql2/promise';
 import { DatabaseService } from 'src/database/database.service';
+
 @Injectable()
 export class UserService {
+  private connection: Connection;
   constructor(
     private readonly prisma: PrismaService,
     private readonly dbService: DatabaseService,
@@ -55,8 +60,119 @@ export class UserService {
       throw new NotFoundException(error.message);
     }
   }
-
+  // USANDO PRISMA
   async findAll() {
+    try {
+      return this.prisma.tbl_system_usuario.findMany({
+        where: {
+          EMAIL_DE_LOGIN: {
+            contains: '@',
+          },
+        },
+        take: 10,
+        orderBy: {
+          ID_USUARIO_SYSTEM: 'desc',
+        },
+        select: {
+          ID_USUARIO_SYSTEM: true,
+          ID_SYSTEM_CFG_CLIENTE: true,
+          ID_PESSOA: true,
+          LOGIN: true,
+          NOME: true,
+          EMAIL_DE_LOGIN: true,
+          SENHA: true,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    } finally {
+      console.log('FECHOU A CONEXÃO 1');
+    }
+  }
+
+  // USANDO MYSQL2 COM MODULO
+  async findAll1() {
+    try {
+      const connection = this.dbService.getConnection();
+      console.log('ABRIU CONEXÃO 1');
+      //[rows]
+      const [rows] = await connection.query(`
+                                            select 
+                                              ID_USUARIO_SYSTEM,
+                                              ID_SYSTEM_CFG_CLIENTE,
+                                              ID_PESSOA,
+                                              LOGIN,
+                                              NOME,
+                                              EMAIL_DE_LOGIN,
+                                              SENHA
+                                            from 
+                                              tbl_system_usuario
+                                            where
+                                             ID_SYSTEM_CFG_CLIENTE = 14
+                                            order by ID_USUARIO_SYSTEM desc limit 2
+                                            `);
+
+      // console.log(rows); // results contains rows returned by server
+      // console.log(fields); // fields cont
+
+      return rows;
+    } catch (err) {
+      console.log(err);
+    } finally {
+      console.log('FECHOU A CONEXÃO 1');
+      //this.connection.end();
+    }
+  }
+  // USANDO MYSQL2 SEN MODULO
+  async findAll2() {
+    console.log('connection: aqui 1 ');
+
+    //  const connection = this.dbService.getConnection();
+
+    this.connection = await createConnection({
+      port: 3306,
+      host: envs.DB_MYSQL_HOST,
+      user: envs.DB_MYSQL_ROOT,
+      password: envs.DB_MYSQL_ROOT_PASSWORD,
+      database: envs.DB_MYSQL_DATABASE,
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0,
+      pool: true,
+    });
+
+    try {
+      console.log('ABRIU CONEXÃO 1');
+      //[rows]
+      const [rows] = await this.connection.query(`
+                                            select 
+                                              ID_USUARIO_SYSTEM,
+                                              ID_SYSTEM_CFG_CLIENTE,
+                                              ID_PESSOA,
+                                              LOGIN,
+                                              NOME,
+                                              EMAIL_DE_LOGIN,
+                                              SENHA
+                                            from 
+                                              tbl_system_usuario
+                                            where
+                                             ID_SYSTEM_CFG_CLIENTE = 14
+                                            order by ID_USUARIO_SYSTEM desc limit 2
+                                            `);
+
+      // console.log(rows); // results contains rows returned by server
+      // console.log(fields); // fields cont
+
+      return rows;
+    } catch (err) {
+      console.log(err);
+    } finally {
+      console.log('FECHOU A CONEXÃO 1');
+      this.connection.end();
+    }
+  }
+
+  async findAll3() {
     /*     return this.prisma.tbl_system_usuario.findMany({
       where: {
         EMAIL_DE_LOGIN: {
@@ -78,8 +194,28 @@ export class UserService {
       },
     }); */
 
-    const connection = this.dbService.getConnection();
-    const [rows] = await connection.query(`
+    //this.dbService.close();
+    //this.dbService.connect();
+    console.log('connection: aqui 1 ');
+
+    //  const connection = this.dbService.getConnection();
+
+    this.connection = await createConnection({
+      port: 3306,
+      host: envs.DB_MYSQL_HOST,
+      user: envs.DB_MYSQL_ROOT,
+      password: envs.DB_MYSQL_ROOT_PASSWORD,
+      database: envs.DB_MYSQL_DATABASE,
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0,
+      pool: true,
+    });
+
+    try {
+      console.log('ABRIU CONEXÃO 1');
+      //[rows]
+      const [rows] = await this.connection.query(`
                                             select 
                                               ID_USUARIO_SYSTEM,
                                               ID_SYSTEM_CFG_CLIENTE,
@@ -94,7 +230,88 @@ export class UserService {
                                              ID_SYSTEM_CFG_CLIENTE = 14
                                             order by ID_USUARIO_SYSTEM desc limit 2
                                             `);
-    return rows;
+
+      // console.log(rows); // results contains rows returned by server
+      // console.log(fields); // fields cont
+
+      return rows;
+    } catch (err) {
+      console.log(err);
+    } finally {
+      console.log('FECHOU A CONEXÃO 1');
+      this.connection.end();
+    }
+  }
+
+  async findAll4() {
+    /*     return this.prisma.tbl_system_usuario.findMany({
+      where: {
+        EMAIL_DE_LOGIN: {
+          contains: '@',
+        },
+      },
+      take: 10,
+      orderBy: {
+        ID_USUARIO_SYSTEM: 'desc',
+      },
+      select: {
+        ID_USUARIO_SYSTEM: true,
+        ID_SYSTEM_CFG_CLIENTE: true,
+        ID_PESSOA: true,
+        LOGIN: true,
+        NOME: true,
+        EMAIL_DE_LOGIN: true,
+        SENHA: true,
+      },
+    }); */
+
+    //this.dbService.close();
+    //this.dbService.connect();
+    console.log('connection: aqui 1 ');
+
+    //  const connection = this.dbService.getConnection();
+
+    this.connection = await createConnection({
+      port: 3306,
+      host: envs.DB_MYSQL_HOST,
+      user: envs.DB_MYSQL_ROOT,
+      password: envs.DB_MYSQL_ROOT_PASSWORD,
+      database: envs.DB_MYSQL_DATABASE,
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0,
+      pool: true,
+    });
+
+    try {
+      console.log('ABRIU CONEXÃO 1');
+      //[rows]
+      const [rows] = await this.connection.query(`
+                                            select 
+                                              ID_USUARIO_SYSTEM,
+                                              ID_SYSTEM_CFG_CLIENTE,
+                                              ID_PESSOA,
+                                              LOGIN,
+                                              NOME,
+                                              EMAIL_DE_LOGIN,
+                                              SENHA
+                                            from 
+                                              tbl_system_usuario
+                                            where
+                                             ID_SYSTEM_CFG_CLIENTE = 14
+                                            order by ID_USUARIO_SYSTEM desc limit 2
+                                            `);
+
+      // console.log(rows); // results contains rows returned by server
+      // console.log(fields); // fields cont
+
+      return rows;
+    } catch (err) {
+      console.log(err);
+    } finally {
+      console.log('FECHOU A CONEXÃO 1');
+      this.connection.end();
+    }
   }
 
   async findOne(id: number) {
