@@ -9,7 +9,7 @@ interface EnvVars {
 
   APP_JWT_SECRET: string;
   APP_PORT: number;
-  APP_HOST_API: string;
+
   DATABASE_URL: string;
   MYSQL_HOST: string;
   MYSQL_ROOT: string;
@@ -24,7 +24,7 @@ const envsSchema = joi
 
     APP_JWT_SECRET: joi.string().required(),
     APP_PORT: joi.number().positive().required(),
-    APP_HOST_API: joi.string().required(),
+
     DATABASE_URL: joi.string().required(),
     MYSQL_HOST: joi.string().required(),
     MYSQL_ROOT: joi.string().required(),
@@ -46,7 +46,7 @@ export const envs = {
 
   APP_JWT_SECRET: envVars.APP_JWT_SECRET,
   APP_PORT: envVars.APP_PORT,
-  APP_HOST_API: envVars.APP_HOST_API,
+
   DATABASE_URL: envVars.DATABASE_URL,
   DB_MYSQL_HOST: envVars.MYSQL_HOST,
   DB_MYSQL_ROOT: envVars.MYSQL_ROOT,
